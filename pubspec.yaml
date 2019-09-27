@@ -17,6 +17,10 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  flutter_native_splash: ^0.1.8+2
+  dio: ^3.0.2
+  rxdart: ^0.22.2
+  bloc_pattern: ^2.3.2
   flutter:
     sdk: flutter
 
@@ -28,7 +32,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
+flutter_native_splash:
+  image: assets/images/splash.png
+  color: "ffffff"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
