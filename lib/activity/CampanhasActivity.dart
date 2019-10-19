@@ -1,3 +1,4 @@
+import 'package:adonate/campanhas/CampanhasBodyWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -8,7 +9,7 @@ class CampanhasActivity extends StatefulWidget {
 
 class CampanhasActivityState extends State<CampanhasActivity> {
   final _kTabPages = <Widget>[
-    Scaffold(),
+    CampanhasBodyWidget(),
     Scaffold(),
   ];
   final _kTabs = <Tab>[
