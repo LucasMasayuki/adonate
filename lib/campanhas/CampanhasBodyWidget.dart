@@ -1,3 +1,5 @@
+import 'package:adonate/activity/DetalhesCampanhaActivity.dart';
+import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -20,7 +22,7 @@ class _CampanhasBodyWidgetState extends State<CampanhasBodyWidget> {
       ),
       body: ListView.builder(
         itemBuilder: (context, position) {
-          return CampanhasAdapter(
+          final campanha = CampanhaModel(
             nomeCampanha: 'Campanha ${position + 1}',
             shortDesc: 'Descrição curta da campanha ${position + 1} teste',
             tag1: 'TAG ${position + 1}',
@@ -28,6 +30,19 @@ class _CampanhasBodyWidgetState extends State<CampanhasBodyWidget> {
             corTag1: Colors.red,
             corTag2: Colors.green,
             dataInicioCampanha: DateTime.now().add(Duration(days: position)),
+          );
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DetalheCampanhaActivity(
+                            campanha: campanha,
+                          )));
+            },
+            child: CampanhasAdapter(
+              campanha: campanha,
+            ),
           );
         },
         itemCount: 10,

@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'CampanhaModel.dart';
+
 class CampanhasAdapter extends StatelessWidget {
-  const CampanhasAdapter(
-      {this.nomeCampanha,
-      this.dataInicioCampanha,
-      this.tag1,
-      this.tag2,
-      this.corTag1,
-      this.corTag2,
-      this.shortDesc});
-  final String nomeCampanha;
-  final DateTime dataInicioCampanha;
-  final String shortDesc;
-  final String tag1;
-  final String tag2;
-  final Color corTag1;
-  final Color corTag2;
+  const CampanhasAdapter({this.campanha});
+  final CampanhaModel campanha;
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +33,13 @@ class CampanhasAdapter extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      nomeCampanha,
+                      campanha.nomeCampanha,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    Text(formatter.format(dataInicioCampanha)),
+                    Text(formatter.format(campanha.dataInicioCampanha)),
                     Text(
-                      shortDesc,
+                      campanha.shortDesc,
                       maxLines: 3,
                     ),
                   ],
@@ -64,17 +53,17 @@ class CampanhasAdapter extends StatelessWidget {
                   children: <Widget>[
                     MaterialButton(
                       onPressed: () {},
-                      color: corTag1,
+                      color: campanha.corTag1,
                       child: Text(
-                        tag1,
+                        campanha.tag1,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                     MaterialButton(
                       onPressed: () {},
-                      color: corTag2,
+                      color: campanha.corTag2,
                       child: Text(
-                        tag2,
+                        campanha.tag2,
                         style: TextStyle(color: Colors.white),
                       ),
                     )
