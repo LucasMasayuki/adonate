@@ -22,8 +22,9 @@ dependencies:
   mask_text_input_formatter: ^1.0.2
   flutter_icons: ^0.3.1
   intl: ^0.16.0
-  shared_preferences: ^0.5.4
+  shared_preferences: ^0.5.4+3
   progress_dialog: ^1.2.0
+  google_maps_flutter: ^0.5.21+8
   flutter:
     sdk: flutter
 

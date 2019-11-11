@@ -1,11 +1,27 @@
+import 'dart:async';
+
 import 'package:adonate/campanhas/CampanhaModel.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class DetalheCampanhaActivity extends StatelessWidget {
+class DetalheCampanhaActivity extends StatefulWidget {
   DetalheCampanhaActivity({this.campanha});
 
   final CampanhaModel campanha;
+
+  @override
+  _DetalheCampanhaActivityState createState() =>
+      _DetalheCampanhaActivityState();
+}
+
+class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
+  Completer<GoogleMapController> _controller = Completer();
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +35,7 @@ class DetalheCampanhaActivity extends StatelessWidget {
             floating: false,
             expandedHeight: 160,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(campanha.nomeCampanha),
+              title: Text(widget.campanha.nomeCampanha),
               background: Container(
                 color: Colors.blue,
               ),
@@ -42,19 +58,28 @@ class DetalheCampanhaActivity extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                     child: Text(
-                      formatter.format(campanha.dataInicioCampanha),
+                      formatter.format(widget.campanha.dataInicioCampanha),
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      campanha.shortDesc,
+                      widget.campanha.shortDesc,
                       maxLines: 3,
                     ),
                   ),
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+            Scaffold(
+              body: GoogleMap(
+                mapType: MapType.hybrid,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
               ),
             ),
           ]))
