@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:adonate/activity/LoginActivity.dart';
 import 'package:adonate/activity/CampanhasActivity.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
+import 'package:adonate/shared/constants.dart';
 
 StatefulWidget activity;
 
@@ -21,9 +23,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: primaryColor,
         hintColor: Colors.white,
-        appBarTheme: AppBarTheme(color: Colors.blue, elevation: 0),
+        appBarTheme: AppBarTheme(color: primaryColor, elevation: 0),
       ),
       home: activity,
     );

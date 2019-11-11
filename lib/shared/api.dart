@@ -8,7 +8,7 @@ class Api {
     return response;
   }
 
-  static postRequest(keyUrl, { data = null }) async {
+  static postRequest(keyUrl, { data }) async {
     String url = Urls.getUrl(keyUrl);
 
     var response = await http.post(url, body: data);

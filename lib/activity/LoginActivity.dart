@@ -106,13 +106,13 @@ class LoginActivityState extends State<LoginActivity> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: <Color>[
-              primaryGradientColor,
-              secondaryGradientColor,
+              primaryColor,
+              secondaryColor,
             ],
           ),
         ),
         child: ListView(
-          padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 150, 0, 0),
           children: <Widget>[
             Center(
               child: Text(

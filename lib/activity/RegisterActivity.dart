@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-import 'package:adonate/shared/errorMessages.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:adonate/shared/constants.dart';
-import 'package:adonate/activity/CampanhasActivity.dart';
-import 'package:http/http.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:adonate/shared/errorMessages.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
+import 'package:adonate/activity/CampanhasActivity.dart';
 
 class RegisterActivity extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => RegisterActivityState();
 }
-
 class RegisterActivityState extends State<RegisterActivity> {
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
@@ -44,6 +44,8 @@ class RegisterActivityState extends State<RegisterActivity> {
     progressDialog.style(
       message: 'Criando usuario...',
     );
+
+    progressDialog.show();
 
     Response response = await Api.postRequest('register', data: data);
     Map<String, dynamic> body = jsonDecode(response.body);
@@ -78,7 +80,6 @@ class RegisterActivityState extends State<RegisterActivity> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     progressDialog = new ProgressDialog(context);
@@ -91,8 +92,8 @@ class RegisterActivityState extends State<RegisterActivity> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: <Color>[
-                primaryGradientColor,
-                secondaryGradientColor,
+                primaryColor,
+                secondaryColor,
               ],
             ),
           ),
@@ -102,12 +103,13 @@ class RegisterActivityState extends State<RegisterActivity> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: <Color>[
-              primaryGradientColor,
-              secondaryGradientColor,
+              primaryColor,
+              secondaryColor,
             ],
           ),
         ),
         child: ListView(
+          padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
           children: <Widget>[
             Center(
               child: Text(
