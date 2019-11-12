@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+
 import 'package:adonate/activity/LoginActivity.dart';
 import 'package:adonate/campanhas/CampanhasBodyWidget.dart';
 import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 
 class CampanhasActivity extends StatefulWidget {
   @override
@@ -19,13 +20,15 @@ class CampanhasActivityState extends State<CampanhasActivity> {
   final _kTabs = <Tab>[
     Tab(
       icon: Icon(
-        FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid)
+        FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
+        color: Colors.white
       ),
       text: "Campanhas"
     ),
     Tab(
       icon: Icon(
         Icons.person_outline,
+        color: Colors.white
       ),
       text: "Minhas campanhas"
     )
@@ -51,12 +54,23 @@ class CampanhasActivityState extends State<CampanhasActivity> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.exit_to_app),
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.white
+              ),
               onPressed: () => logout(),
             ),
           ],
-          title: Text('Adonate'),
+          leading: Container(),
+          title: Text(
+            'Adonate',
+            style: TextStyle(
+              color: Colors.white
+            ),
+          ),
           bottom: TabBar(
+            labelColor: Colors.white,
+            indicatorColor: Colors.orange,
             tabs: _kTabs,
           ),
         ),
