@@ -10,6 +10,7 @@ class TextFormFieldCustom extends StatelessWidget {
   final textCapitalization;
   final inputFormatters;
   final contentPadding;
+  final bool obscureText;
 
   const TextFormFieldCustom({
     Key key,
@@ -22,27 +23,27 @@ class TextFormFieldCustom extends StatelessWidget {
     this.inputFormatters,
     this.textCapitalization,
     this.contentPadding,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        border: new OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            const Radius.circular(16.0),
+          border: new OutlineInputBorder(
+            borderRadius: const BorderRadius.all(
+              const Radius.circular(16.0),
+            ),
           ),
-        ),
-        contentPadding: this.contentPadding,
-        filled: true,
-        fillColor: Colors.white,
-        hintText: hintText,
-        errorText: errorText,
-        hintStyle: TextStyle(color: Colors.grey)
-      ),
+          contentPadding: this.contentPadding,
+          filled: true,
+          fillColor: Colors.white,
+          hintText: hintText,
+          errorText: errorText,
+          hintStyle: TextStyle(color: Colors.grey)),
       style: TextStyle(color: Colors.black),
       controller: controller,
-      obscureText: false,
+      obscureText: obscureText,
       onChanged: this.onChanged,
     );
   }
