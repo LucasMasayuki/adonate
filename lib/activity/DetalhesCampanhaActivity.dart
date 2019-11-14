@@ -74,12 +74,14 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
               ),
             ),
             Scaffold(
-              body: GoogleMap(
-                mapType: MapType.hybrid,
-                initialCameraPosition: _kGooglePlex,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
+              body: Container(
+                child: GoogleMap(
+                  mapType: MapType.hybrid,
+                  initialCameraPosition: _kGooglePlex,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
               ),
             ),
           ]))

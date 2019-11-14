@@ -89,7 +89,7 @@ class LoginActivityState extends State<LoginActivity> {
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => CampanhasActivity()));
   }
 
