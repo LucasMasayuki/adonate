@@ -24,7 +24,7 @@ dependencies:
   intl: ^0.16.0
   shared_preferences: ^0.5.4+3
   progress_dialog: ^1.2.0
-  google_maps_flutter: ^0.5.21+8
+  google_maps_flutter: ^0.5.21+11
   flutter:
     sdk: flutter
 

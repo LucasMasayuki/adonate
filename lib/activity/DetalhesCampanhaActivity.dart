@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:adonate/campanhas/CampanhaModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,12 +20,23 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: LatLng(-23.572599, -46.531885),
+    zoom: 18.4746,
   );
 
   @override
   Widget build(BuildContext context) {
+    final MarkerId markerId = MarkerId('marker_id_0');
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(-23.572599, -46.531885),
+      infoWindow:
+          InfoWindow(title: widget.campanha.nomeCampanha, snippet: 'ONG'),
+    );
+
+    Set<Marker> markers = Set<Marker>();
+    markers.add(marker);
     final formatter = DateFormat("dd/MM/yyyy h:mm a");
     return Scaffold(
       body: CustomScrollView(
@@ -73,15 +85,22 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
             ),
-            Scaffold(
-              body: Container(
-                child: GoogleMap(
-                  mapType: MapType.hybrid,
-                  initialCameraPosition: _kGooglePlex,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                ),
+            Container(
+              height: 300,
+              width: 100,
+              color: Colors.grey[100],
+              child: GoogleMap(
+                padding: EdgeInsets.all(10),
+                mapType: MapType.terrain,
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+                mapToolbarEnabled: true,
+                markers: markers,
+                initialCameraPosition: _kGooglePlex,
+                compassEnabled: true,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
               ),
             ),
           ]))
@@ -89,6 +108,4 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
       ),
     );
   }
-
-  final children = [];
 }
