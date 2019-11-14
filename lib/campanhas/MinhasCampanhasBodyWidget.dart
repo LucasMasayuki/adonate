@@ -1,4 +1,4 @@
-import 'package:adonate/activity/DetalhesCampanhaActivity.dart';
+import 'package:adonate/activity/DetalheMinhaCampanhaActivity.dart';
 import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:adonate/campanhas/MinhasCampanhasAdapter.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,7 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DetalheCampanhaActivity(
+                      builder: (context) => DetalheMinhaCampanhaActivity(
                             campanha: campanha,
                           )));
             },
