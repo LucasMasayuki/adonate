@@ -1,3 +1,4 @@
+import 'package:adonate/campanhas/MinhasCampanhasBodyWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -14,36 +15,27 @@ class CampanhasActivity extends StatefulWidget {
 class CampanhasActivityState extends State<CampanhasActivity> {
   final _kTabPages = <Widget>[
     CampanhasBodyWidget(),
-    Scaffold(),
+    MinhasCampanhasBodyWidget(),
   ];
 
   final _kTabs = <Tab>[
     Tab(
-      icon: Icon(
-        FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
-        color: Colors.white
-      ),
-      text: "Campanhas"
-    ),
+        icon: Icon(
+            FontAwesome5.getIconData("hand-holding-heart",
+                weight: IconWeight.Solid),
+            color: Colors.white),
+        text: "Campanhas"),
     Tab(
-      icon: Icon(
-        Icons.person_outline,
-        color: Colors.white
-      ),
-      text: "Minhas campanhas"
-    )
+        icon: Icon(Icons.person_outline, color: Colors.white),
+        text: "Minhas campanhas")
   ];
 
   logout() async {
-      await Api.postRequest('logout');
-      await SharedPreferencesHelper.remove('token');
+    await Api.postRequest('logout');
+    await SharedPreferencesHelper.remove('token');
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginActivity()
-        )
-      );
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginActivity()));
   }
 
   @override
@@ -54,19 +46,14 @@ class CampanhasActivityState extends State<CampanhasActivity> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(
-                Icons.exit_to_app,
-                color: Colors.white
-              ),
+              icon: Icon(Icons.exit_to_app, color: Colors.white),
               onPressed: () => logout(),
             ),
           ],
           leading: Container(),
           title: Text(
             'Adonate',
-            style: TextStyle(
-              color: Colors.white
-            ),
+            style: TextStyle(color: Colors.white),
           ),
           bottom: TabBar(
             labelColor: Colors.white,
@@ -77,8 +64,8 @@ class CampanhasActivityState extends State<CampanhasActivity> {
         body: Builder(
           builder: (context) {
             return Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: TabBarView(children: _kTabPages));
+                padding: const EdgeInsets.only(top: 10.0),
+                child: TabBarView(children: _kTabPages));
           },
         ),
       ),
