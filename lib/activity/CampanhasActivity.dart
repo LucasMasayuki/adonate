@@ -1,11 +1,9 @@
+import 'package:adonate/shared/wigdets/default_drawer.dart';
 import 'package:adonate/campanhas/MinhasCampanhasBodyWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-import 'package:adonate/activity/LoginActivity.dart';
 import 'package:adonate/campanhas/CampanhasBodyWidget.dart';
-import 'package:adonate/shared/api.dart';
-import 'package:adonate/shared/sharedPreferencesHelper.dart';
 
 class CampanhasActivity extends StatefulWidget {
   @override
@@ -46,7 +44,10 @@ class CampanhasActivityState extends State<CampanhasActivity> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.exit_to_app, color: Colors.white),
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.white
+              ),
               onPressed: () => logout(),
             ),
           ],
@@ -60,6 +61,9 @@ class CampanhasActivityState extends State<CampanhasActivity> {
             indicatorColor: Colors.orange,
             tabs: _kTabs,
           ),
+        ),
+        drawer: Drawer(
+          child: DefaultDrawer(),
         ),
         body: Builder(
           builder: (context) {

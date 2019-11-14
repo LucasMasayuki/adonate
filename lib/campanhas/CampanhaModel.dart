@@ -1,19 +1,21 @@
-import 'dart:ui';
-
 class CampanhaModel {
-  const CampanhaModel(
-      {this.nomeCampanha,
-      this.dataInicioCampanha,
-      this.tag1,
-      this.tag2,
-      this.corTag1,
-      this.corTag2,
-      this.shortDesc});
-  final String nomeCampanha;
-  final DateTime dataInicioCampanha;
-  final String shortDesc;
-  final String tag1;
-  final String tag2;
-  final Color corTag1;
-  final Color corTag2;
+  final String name;
+  final DateTime start;
+  final DateTime end;
+  final String description;
+  final String itemTypeTagName;
+  final String purposeTagName;
+  final String itemTypeTagColor;
+  final String purposeTagColor;
+
+  const CampanhaModel({
+    this.name,
+    this.start,
+    this.end,
+    this.description,
+    this.itemTypeTagName,
+    this.purposeTagName,
+    this.itemTypeTagColor,
+    this.purposeTagColor
+  });
 }

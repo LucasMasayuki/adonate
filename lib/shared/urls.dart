@@ -3,7 +3,9 @@ class Urls {
   static Map url = {
     'login': 'login/',
     'register': 'register',
-    'logout': 'logout/'
+    'logout': 'logout/',
+    'campaigns': 'api/campaigns/',
+    'auth': 'api/auth/'
   };
 
   static getUrl(key) {
