@@ -17,15 +17,21 @@ class DetalheMinhaCampanhaActivity extends StatefulWidget {
 class _DetalheMinhaCampanhaActivityState
     extends State<DetalheMinhaCampanhaActivity> {
   File _image;
+  TextEditingController _nomeController;
+  TextEditingController _inicioController;
+  TextEditingController _shortDescController;
+  @override
+  void initState() {
+    _nomeController = TextEditingController(text: widget.campanha.nomeCampanha);
+    _inicioController = TextEditingController(
+        text: widget.campanha.dataInicioCampanha.toIso8601String());
+    _shortDescController =
+        TextEditingController(text: widget.campanha.shortDesc);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nomeController =
-        TextEditingController(text: widget.campanha.nomeCampanha);
-    TextEditingController _inicioController = TextEditingController(
-        text: widget.campanha.dataInicioCampanha.toIso8601String());
-    TextEditingController _shortDescController =
-        TextEditingController(text: widget.campanha.shortDesc);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[600],
@@ -49,23 +55,61 @@ class _DetalheMinhaCampanhaActivityState
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50))),
                     controller: _nomeController,
                   ),
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  TextField(
-                    controller: _inicioController,
+                  Container(
+                    width: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50))),
+                        controller: _inicioController,
+                      ),
+                    ),
                   ),
-                  TextField(
-                    controller: _inicioController,
+                  Container(
+                    width: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50))),
+                        controller: _inicioController,
+                      ),
+                    ),
                   ),
                 ],
               ),
-              TextField(
-                controller: _shortDescController,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  minLines: 3,
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50))),
+                  controller: _shortDescController,
+                ),
               ),
+              DropdownButton(
+                  items: <String>['A', 'B', 'C', 'D'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (_) {})
             ],
           ),
         ),
@@ -76,10 +120,14 @@ class _DetalheMinhaCampanhaActivityState
   Widget _returnImageOfCampanha() {
     return GestureDetector(
       onTap: _getImage,
-      child: Center(
-        child: (_image == null
-            ? Text('Selecione uma imagem')
-            : Image.file(_image)),
+      child: Container(
+        width: 200,
+        height: 100,
+        child: Center(
+          child: (_image == null
+              ? Text('Selecione uma imagem')
+              : Image.file(_image)),
+        ),
       ),
     );
   }
