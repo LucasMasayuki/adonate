@@ -25,7 +25,13 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat("dd/MM/yyyy h:mm a");
+    final formatter = DateFormat("dd/MM/yyyy");
+    String period = 'Desde ${formatter.format(widget.campanha.start)}';
+
+    if (widget.campanha.end != null) {
+      period = 'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
+    }
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -35,54 +41,55 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
             floating: false,
             expandedHeight: 160,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.campanha.nomeCampanha),
-              background: Container(
-                color: Colors.blue,
+              titlePadding: EdgeInsets.all(0.0),
+              title: Text(
+                widget.campanha.name,
+                textAlign: TextAlign.left,
               ),
             ),
           ),
           SliverList(
               delegate: SliverChildListDelegate([
-            Container(
-              color: Colors.grey[300],
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'ONG X',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              Container(
+                color: Colors.grey[300],
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'ONG X',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                    child: Text(
-                      formatter.format(widget.campanha.dataInicioCampanha),
-                      style: TextStyle(fontSize: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                      child: Text(
+                        period,
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.campanha.shortDesc,
-                      maxLines: 3,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        widget.campanha.description,
+                        maxLines: 3,
+                      ),
                     ),
-                  ),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.start,
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
               ),
-            ),
-            Scaffold(
-              body: GoogleMap(
-                mapType: MapType.hybrid,
-                initialCameraPosition: _kGooglePlex,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
+              Scaffold(
+                body: GoogleMap(
+                  mapType: MapType.hybrid,
+                  initialCameraPosition: _kGooglePlex,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                ),
               ),
-            ),
-          ]))
+            ])
+          )
         ],
       ),
     );

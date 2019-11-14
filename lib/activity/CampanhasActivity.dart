@@ -1,10 +1,8 @@
+import 'package:adonate/shared/wigdets/default_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-import 'package:adonate/activity/LoginActivity.dart';
 import 'package:adonate/campanhas/CampanhasBodyWidget.dart';
-import 'package:adonate/shared/api.dart';
-import 'package:adonate/shared/sharedPreferencesHelper.dart';
 
 class CampanhasActivity extends StatefulWidget {
   @override
@@ -34,18 +32,6 @@ class CampanhasActivityState extends State<CampanhasActivity> {
     )
   ];
 
-  logout() async {
-      await Api.postRequest('logout');
-      await SharedPreferencesHelper.remove('token');
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginActivity()
-        )
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -58,7 +44,7 @@ class CampanhasActivityState extends State<CampanhasActivity> {
                 Icons.exit_to_app,
                 color: Colors.white
               ),
-              onPressed: () => logout(),
+              onPressed: () => {},
             ),
           ],
           leading: Container(),
@@ -73,6 +59,9 @@ class CampanhasActivityState extends State<CampanhasActivity> {
             indicatorColor: Colors.orange,
             tabs: _kTabs,
           ),
+        ),
+        drawer: Drawer(
+          child: DefaultDrawer(),
         ),
         body: Builder(
           builder: (context) {
