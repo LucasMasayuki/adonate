@@ -34,7 +34,7 @@ class RegisterActivityState extends State<RegisterActivity> {
   var progressDialog;
 
   register() async {
-    Map data = { 
+    Map data = {
       "username": nameController.text,
       "email": emailController.text,
       "password1": passwordController.text,
@@ -49,7 +49,7 @@ class RegisterActivityState extends State<RegisterActivity> {
 
     Response response = await Api.postRequest('register', data: data);
     Map<String, dynamic> body = jsonDecode(response.body);
-  
+
     var responseList = body.entries.toList();
 
     if (response.statusCode != 200) {
@@ -73,11 +73,7 @@ class RegisterActivityState extends State<RegisterActivity> {
     await SharedPreferencesHelper.save('token', body['key']);
 
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CampanhasActivity()
-      )
-    );
+        context, MaterialPageRoute(builder: (context) => CampanhasActivity()));
   }
 
   @override
@@ -121,94 +117,90 @@ class RegisterActivityState extends State<RegisterActivity> {
               padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: nameController,
-                  hintText: 'Nome',
-                  textCapitalization: TextCapitalization.words,
-                  keyboardType: TextInputType.text,
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: usernameErrorMessage
-                ),
+                    controller: nameController,
+                    hintText: 'Nome',
+                    textCapitalization: TextCapitalization.words,
+                    keyboardType: TextInputType.text,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: usernameErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: emailController,
-                  hintText: 'E-mail',
-                  keyboardType: TextInputType.emailAddress,
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: emailErrorMessage
-                ),
+                    controller: emailController,
+                    hintText: 'E-mail',
+                    keyboardType: TextInputType.emailAddress,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: emailErrorMessage),
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: loginController,
-                  hintText: 'CPF/CNPJ',
-                  maxLength: 18,
-                  inputFormatters: [maskFormatter],
-                  onChanged: (value) {
-                    if (value.length > 14) {
-                      loginController.value =
-                          maskFormatter.updateMask("##.###.###/####-##");
-                    } else {
-                      loginController.value =
-                          maskFormatter.updateMask("###.###.###-###");
-                    }
-                  },
-                  keyboardType: TextInputType.number,
-                  contentPadding: defaultPaddingFormTextField
-                ),
+                    controller: loginController,
+                    hintText: 'CPF/CNPJ',
+                    maxLength: 18,
+                    inputFormatters: [maskFormatter],
+                    onChanged: (value) {
+                      if (value.length > 14) {
+                        loginController.value =
+                            maskFormatter.updateMask("##.###.###/####-##");
+                      } else {
+                        loginController.value =
+                            maskFormatter.updateMask("###.###.###-###");
+                      }
+                    },
+                    keyboardType: TextInputType.number,
+                    contentPadding: defaultPaddingFormTextField),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: passwordController,
-                  hintText: 'Senha',
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: password1ErrorMessage
-                ),
+                    controller: passwordController,
+                    hintText: 'Senha',
+                    obscureText: true,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: password1ErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: confirmPasswordController,
-                  hintText: 'Confirmar senha',
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: password2ErrorMessage
-                ),
+                    controller: confirmPasswordController,
+                    hintText: 'Confirmar senha',
+                    obscureText: true,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: password2ErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 24, 40, 20),
               child: Center(
-                child: RaisedGradientButton(
-                  child: Text(
-                    'Criar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
+                  child: RaisedGradientButton(
+                child: Text(
+                  'Criar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
                   ),
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      primaryGradientColorButton,
-                      secondaryGradientColorButton,
-                    ],
-                  ),
-                  onPressed: () {
-                    register();
-                  },
-                  padding: defaultPaddingRaisedButton,
-                )
-              ),
+                ),
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    primaryGradientColorButton,
+                    secondaryGradientColorButton,
+                  ],
+                ),
+                onPressed: () {
+                  register();
+                },
+                padding: defaultPaddingRaisedButton,
+              )),
             )
           ],
         ),

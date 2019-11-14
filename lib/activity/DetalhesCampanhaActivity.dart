@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:adonate/campanhas/CampanhaModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetalheCampanhaActivity extends StatefulWidget {
   DetalheCampanhaActivity({this.campanha});
@@ -19,8 +21,8 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: LatLng(-23.572599, -46.531885),
+    zoom: 18.4746,
   );
 
   @override
@@ -32,7 +34,20 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
       period = 'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
     }
 
+    final MarkerId markerId = MarkerId('marker_id_0');
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(-23.572599, -46.531885),
+      infoWindow:
+          InfoWindow(title: widget.campanha.nomeCampanha, snippet: 'ONG'),
+    );
+
+    Set<Marker> markers = Set<Marker>();
+    markers.add(marker);
+    final formatter = DateFormat("dd/MM/yyyy h:mm a");
     return Scaffold(
+      backgroundColor: Colors.blue,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -79,21 +94,87 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
               ),
-              Scaffold(
-                body: GoogleMap(
-                  mapType: MapType.hybrid,
+            ),
+            Container(
+              padding: EdgeInsets.all(15),
+              color: Colors.blue,
+              child: Center(
+                  child: Text(
+                'Localização',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              )),
+            ),
+            Container(
+              height: 300,
+              width: 100,
+              color: Colors.blue,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GoogleMap(
+                  mapType: MapType.terrain,
+                  myLocationButtonEnabled: true,
+                  myLocationEnabled: true,
+                  mapToolbarEnabled: true,
+                  markers: markers,
                   initialCameraPosition: _kGooglePlex,
+                  compassEnabled: true,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                   },
                 ),
               ),
-            ])
-          )
+            ),
+            Container(
+              color: Colors.blue,
+              child: ButtonTheme.bar(
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 18.0),
+                      child: FloatingActionButton(
+                        heroTag: 'email',
+                        backgroundColor: Colors.orange,
+                        onPressed: _launchEmail,
+                        elevation: 0,
+                        child: Icon(Icons.email),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18.0),
+                      child: FloatingActionButton(
+                          heroTag: 'call',
+                          backgroundColor: Colors.orange,
+                          onPressed: _launchCellphone,
+                          elevation: 0,
+                          child: Icon(Icons.call)),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ]))
         ],
       ),
     );
   }
 
-  final children = [];
+  _launchEmail() async {
+    String url =
+        'mailto:ongx@gmail.com?subject=Doação%20para%20${widget.campanha.nomeCampanha}&body=Quero%20doar%20estes%20itens:';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  _launchCellphone() async {
+    String url = 'tel:992542757';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }
