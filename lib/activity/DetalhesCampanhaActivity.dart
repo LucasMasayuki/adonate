@@ -31,7 +31,8 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
     String period = 'Desde ${formatter.format(widget.campanha.start)}';
 
     if (widget.campanha.end != null) {
-      period = 'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
+      period =
+          'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
     }
 
     final MarkerId markerId = MarkerId('marker_id_0');
@@ -39,8 +40,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
     final Marker marker = Marker(
       markerId: markerId,
       position: LatLng(-23.572599, -46.531885),
-      infoWindow:
-          InfoWindow(title: widget.campanha.name, snippet: 'ONG'),
+      infoWindow: InfoWindow(title: widget.campanha.name, snippet: 'ONG'),
     );
 
     Set<Marker> markers = Set<Marker>();
@@ -64,35 +64,36 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
           ),
           SliverList(
               delegate: SliverChildListDelegate([
-              Container(
-                color: Colors.grey[300],
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        'ONG X',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
+            Container(
+              color: Colors.grey[300],
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'ONG X',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                      child: Text(
-                        period,
-                        style: TextStyle(fontSize: 16),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                    child: Text(
+                      period,
+                      style: TextStyle(fontSize: 16),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        widget.campanha.description,
-                        maxLines: 3,
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      widget.campanha.description,
+                      maxLines: 3,
                     ),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                ),
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
               ),
+            ),
             Container(
               padding: EdgeInsets.all(15),
               color: Colors.blue,
