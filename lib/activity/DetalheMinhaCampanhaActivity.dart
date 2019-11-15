@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DetalheMinhaCampanhaActivity extends StatefulWidget {
   const DetalheMinhaCampanhaActivity({this.campanha});
@@ -19,12 +21,20 @@ class _DetalheMinhaCampanhaActivityState
   File _image;
   TextEditingController _nomeController;
   TextEditingController _inicioController;
+  TextEditingController _fimController;
   TextEditingController _shortDescController;
+  String _valorProposeTag;
+  String _valorTypeItemTag;
+
+  final formatter = DateFormat("dd/MM/yyyy");
+
   @override
   void initState() {
     _nomeController = TextEditingController(text: widget.campanha.name);
     _inicioController =
-        TextEditingController(text: widget.campanha.start.toIso8601String());
+        TextEditingController(text: formatter.format(widget.campanha.start));
+    _fimController =
+        TextEditingController(text: formatter.format(widget.campanha.end));
     _shortDescController =
         TextEditingController(text: widget.campanha.description);
     super.initState();
@@ -44,7 +54,6 @@ class _DetalheMinhaCampanhaActivityState
       body: Padding(
         padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           color: Colors.white,
           child: ListView(
             children: <Widget>[
@@ -55,9 +64,7 @@ class _DetalheMinhaCampanhaActivityState
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50))),
+                    decoration: InputDecoration(border: OutlineInputBorder()),
                     controller: _nomeController,
                   ),
                 ),
@@ -66,50 +73,89 @@ class _DetalheMinhaCampanhaActivityState
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
-                    width: 100,
+                    width: 150,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 20.0),
                       child: TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50))),
+                        maxLength: 10,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          MaskTextInputFormatter(mask: '##/##/####')
+                        ],
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder()),
                         controller: _inicioController,
                       ),
                     ),
                   ),
                   Container(
-                    width: 100,
+                    width: 150,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50))),
-                        controller: _inicioController,
+                        maxLength: 10,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          MaskTextInputFormatter(mask: '##/##/####')
+                        ],
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder()),
+                        controller: _fimController,
                       ),
                     ),
                   ),
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(4.0),
                 child: TextField(
+                  maxLength: 255,
                   minLines: 3,
                   maxLines: 10,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50))),
+                  decoration: InputDecoration(border: OutlineInputBorder()),
                   controller: _shortDescController,
                 ),
               ),
-              DropdownButton(
-                  items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (_) {})
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: DropdownButton(
+                      hint: Text('Para quem'),
+                      value: _valorProposeTag,
+                      items: <String>['Crianças', 'Desabrigados']
+                          .map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _valorProposeTag = value;
+                        });
+                      }),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: DropdownButton(
+                      hint: Text('O que'),
+                      value: _valorTypeItemTag,
+                      items:
+                          <String>['Brinquedos', 'Roupas'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _valorTypeItemTag = value;
+                        });
+                      }),
+                ),
+              )
             ],
           ),
         ),
@@ -122,7 +168,7 @@ class _DetalheMinhaCampanhaActivityState
       onTap: _getImage,
       child: Container(
         width: 200,
-        height: 100,
+        height: 150,
         child: Center(
           child: (_image == null
               ? Text('Selecione uma imagem')

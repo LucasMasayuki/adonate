@@ -18,8 +18,7 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
       floatingActionButton: FloatingActionButton(
         heroTag: 'MinhasCampanhas',
         onPressed: () {},
-        child:
-            Icon(FontAwesome5.getIconData('search', weight: IconWeight.Solid)),
+        child: Icon(Icons.add),
       ),
       body: ListView.builder(
         itemBuilder: (context, position) {
