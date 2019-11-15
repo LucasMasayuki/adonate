@@ -12,12 +12,13 @@ class CampanhasAdapter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat("dd/MM/yyyy");
-    double tagWidth = MediaQuery.of(context).size.width*0.38;
-    double descriptionWidth = MediaQuery.of(context).size.width*0.58;
+    double tagWidth = MediaQuery.of(context).size.width * 0.38;
+    double descriptionWidth = MediaQuery.of(context).size.width * 0.58;
     String period = 'Desde ${formatter.format(campanha.start)}';
 
     if (campanha.end != null) {
-      period = 'De ${formatter.format(campanha.start)} \nAté ${formatter.format(campanha.end)}';
+      period =
+          'De ${formatter.format(campanha.start)} \nAté ${formatter.format(campanha.end)}';
     }
 
     return Card(
@@ -46,7 +47,8 @@ class CampanhasAdapter extends StatelessWidget {
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
                       campanha.name,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                     Text(period),
@@ -70,11 +72,13 @@ class CampanhasAdapter extends StatelessWidget {
                     children: <Widget>[
                       ChipDesign(
                         label: campanha.purposeTagName,
-                        color: ColorsHelper.hexToColor(campanha.purposeTagColor),
+                        color:
+                            ColorsHelper.hexToColor(campanha.purposeTagColor),
                       ),
                       ChipDesign(
                         label: campanha.itemTypeTagName,
-                        color: ColorsHelper.hexToColor(campanha.itemTypeTagColor),
+                        color:
+                            ColorsHelper.hexToColor(campanha.itemTypeTagColor),
                       ),
                     ],
                   ),

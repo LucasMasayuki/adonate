@@ -20,7 +20,7 @@ class MinhasCampanhasAdapter extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.only(right: 20),
@@ -43,7 +43,7 @@ class MinhasCampanhasAdapter extends StatelessWidget {
               Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     ChipDesign(
                       label: campanha.purposeTagName,
