@@ -22,11 +22,11 @@ class _DetalheMinhaCampanhaActivityState
   TextEditingController _shortDescController;
   @override
   void initState() {
-    _nomeController = TextEditingController(text: widget.campanha.nomeCampanha);
-    _inicioController = TextEditingController(
-        text: widget.campanha.dataInicioCampanha.toIso8601String());
+    _nomeController = TextEditingController(text: widget.campanha.name);
+    _inicioController =
+        TextEditingController(text: widget.campanha.start.toIso8601String());
     _shortDescController =
-        TextEditingController(text: widget.campanha.shortDesc);
+        TextEditingController(text: widget.campanha.description);
     super.initState();
   }
 
@@ -36,7 +36,7 @@ class _DetalheMinhaCampanhaActivityState
       appBar: AppBar(
         backgroundColor: Colors.blue[600],
         title: Text(
-          'Editar ${widget.campanha.nomeCampanha}',
+          'Editar ${widget.campanha.name}',
           style: TextStyle(color: Colors.white),
         ),
       ),

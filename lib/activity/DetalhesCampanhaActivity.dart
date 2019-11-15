@@ -40,12 +40,11 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
       markerId: markerId,
       position: LatLng(-23.572599, -46.531885),
       infoWindow:
-          InfoWindow(title: widget.campanha.nomeCampanha, snippet: 'ONG'),
+          InfoWindow(title: widget.campanha.name, snippet: 'ONG'),
     );
 
     Set<Marker> markers = Set<Marker>();
     markers.add(marker);
-    final formatter = DateFormat("dd/MM/yyyy h:mm a");
     return Scaffold(
       backgroundColor: Colors.blue,
       body: CustomScrollView(
@@ -94,7 +93,6 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
               ),
-            ),
             Container(
               padding: EdgeInsets.all(15),
               color: Colors.blue,
@@ -161,7 +159,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
 
   _launchEmail() async {
     String url =
-        'mailto:ongx@gmail.com?subject=Doação%20para%20${widget.campanha.nomeCampanha}&body=Quero%20doar%20estes%20itens:';
+        'mailto:ongx@gmail.com?subject=Doação%20para%20${widget.campanha.name}&body=Quero%20doar%20estes%20itens:';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

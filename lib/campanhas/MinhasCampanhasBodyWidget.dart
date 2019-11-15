@@ -24,14 +24,14 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
       body: ListView.builder(
         itemBuilder: (context, position) {
           final campanha = CampanhaModel(
-            nomeCampanha: 'Campanha ${position + 1}',
-            shortDesc: 'Descrição curta da campanha ${position + 1} teste',
-            tag1: 'TAG ${position + 1}',
-            tag2: 'TAG ${(position + 1) * 2}',
-            corTag1: Colors.red,
-            corTag2: Colors.green,
-            dataInicioCampanha: DateTime.now().add(Duration(days: position)),
-          );
+              name: 'Campanha ${position + 1}',
+              description: 'Descrição curta da campanha ${position + 1} teste',
+              purposeTagName: 'TAG ${position + 1}',
+              itemTypeTagName: 'TAG ${(position + 1) * 2}',
+              itemTypeTagColor: '#FF0000',
+              purposeTagColor: '#00FF00',
+              start: DateTime.now().add(Duration(days: position)),
+              end: DateTime.now().add(Duration(days: 30)));
           return GestureDetector(
             onTap: () {
               Navigator.push(

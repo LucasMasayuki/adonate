@@ -1,3 +1,5 @@
+import 'package:adonate/shared/colorsHelper.dart';
+import 'package:adonate/shared/wigdets/chip_design.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,13 +27,13 @@ class MinhasCampanhasAdapter extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      campanha.nomeCampanha,
+                      campanha.name,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    Text(formatter.format(campanha.dataInicioCampanha)),
+                    Text(formatter.format(campanha.start)),
                     Text(
-                      campanha.shortDesc,
+                      campanha.description,
                       maxLines: 3,
                     ),
                   ],
@@ -43,21 +45,13 @@ class MinhasCampanhasAdapter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    MaterialButton(
-                      onPressed: () {},
-                      color: campanha.corTag1,
-                      child: Text(
-                        campanha.tag1,
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    ChipDesign(
+                      label: campanha.purposeTagName,
+                      color: ColorsHelper.hexToColor(campanha.purposeTagColor),
                     ),
-                    MaterialButton(
-                      onPressed: () {},
-                      color: campanha.corTag2,
-                      child: Text(
-                        campanha.tag2,
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    ChipDesign(
+                      label: campanha.itemTypeTagName,
+                      color: ColorsHelper.hexToColor(campanha.itemTypeTagColor),
                     )
                   ],
                 ),
