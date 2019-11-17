@@ -1,10 +1,8 @@
+import 'package:adonate/activity/CriarCampanhaActivity.dart';
 import 'package:adonate/activity/DetalheMinhaCampanhaActivity.dart';
 import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:adonate/campanhas/MinhasCampanhasAdapter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-
-import 'CampanhasAdapter.dart';
 
 class MinhasCampanhasBodyWidget extends StatefulWidget {
   @override
@@ -17,7 +15,10 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         heroTag: 'MinhasCampanhas',
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CriarCampanhaActivity()));
+        },
         child: Icon(Icons.add),
       ),
       body: ListView.builder(

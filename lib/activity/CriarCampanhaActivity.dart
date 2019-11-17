@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:flutter/material.dart';
@@ -8,41 +7,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class DetalheMinhaCampanhaActivity extends StatefulWidget {
-  const DetalheMinhaCampanhaActivity({this.campanha});
-
-  final CampanhaModel campanha;
+class CriarCampanhaActivity extends StatefulWidget {
+  const CriarCampanhaActivity();
 
   @override
-  _DetalheMinhaCampanhaActivityState createState() =>
-      _DetalheMinhaCampanhaActivityState();
+  _CriarCampanhaActivityState createState() => _CriarCampanhaActivityState();
 }
 
-class _DetalheMinhaCampanhaActivityState
-    extends State<DetalheMinhaCampanhaActivity> {
+class _CriarCampanhaActivityState extends State<CriarCampanhaActivity> {
   File _image;
-  TextEditingController _nomeController;
-  TextEditingController _inicioController;
-  TextEditingController _fimController;
-  TextEditingController _shortDescController;
-  TextEditingController _enderecoController;
+  TextEditingController _nomeController = TextEditingController();
+  TextEditingController _inicioController = TextEditingController();
+  TextEditingController _fimController = TextEditingController();
+  TextEditingController _shortDescController = TextEditingController();
+  TextEditingController _enderecoController = TextEditingController();
   String _valorProposeTag;
   String _valorTypeItemTag;
 
   final formatter = DateFormat("dd/MM/yyyy");
-
-  @override
-  void initState() {
-    _nomeController = TextEditingController(text: widget.campanha.name);
-    _inicioController =
-        TextEditingController(text: formatter.format(widget.campanha.start));
-    _fimController =
-        TextEditingController(text: formatter.format(widget.campanha.end));
-    _shortDescController =
-        TextEditingController(text: widget.campanha.description);
-    _enderecoController = TextEditingController();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +32,7 @@ class _DetalheMinhaCampanhaActivityState
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          'Editar ${widget.campanha.name}',
+          'Criar Campanha',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -188,7 +170,7 @@ class _DetalheMinhaCampanhaActivityState
                   child: Container(
                     child: RaisedGradientButton(
                       child: Text(
-                        'Salvar',
+                        'Criar',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
