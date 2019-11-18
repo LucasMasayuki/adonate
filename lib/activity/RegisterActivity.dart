@@ -68,6 +68,7 @@ class RegisterActivityState extends State<RegisterActivity> {
       });
 
       progressDialog.hide();
+      return;
     }
 
     await SharedPreferencesHelper.save('token', body['key']);

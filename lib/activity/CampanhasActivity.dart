@@ -22,22 +22,23 @@ class CampanhasActivityState extends State<CampanhasActivity> {
 
   final _kTabs = <Tab>[
     Tab(
-        icon: Icon(
-            FontAwesome5.getIconData("hand-holding-heart",
-                weight: IconWeight.Solid),
-            color: Colors.white),
-        text: "Campanhas"),
+      icon: Icon(
+        FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
+        color: Colors.white
+      ),
+      text: "Campanhas"
+    ),
     Tab(
-        icon: Icon(Icons.person_outline, color: Colors.white),
-        text: "Minhas campanhas")
+      icon: Icon(Icons.person_outline, color: Colors.white),
+      text: "Minhas campanhas"
+    )
   ];
 
   logout() async {
     await Api.postRequest('logout');
     await SharedPreferencesHelper.remove('token');
 
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginActivity()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginActivity()));
   }
 
   @override
@@ -49,21 +50,23 @@ class CampanhasActivityState extends State<CampanhasActivity> {
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.exit_to_app,
+                Icons.search,
                 color: Colors.white
               ),
-              onPressed: () => logout(),
+              onPressed: () => { },
             ),
           ],
-          leading: Container(),
-          title: Text(
-            'Adonate',
-            style: TextStyle(color: Colors.white),
-          ),
           bottom: TabBar(
             labelColor: Colors.white,
             indicatorColor: Colors.orange,
             tabs: _kTabs,
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          title: Text(
+            'Adonate',
+            style: TextStyle(color: Colors.white),
           ),
         ),
         drawer: Drawer(
@@ -72,8 +75,9 @@ class CampanhasActivityState extends State<CampanhasActivity> {
         body: Builder(
           builder: (context) {
             return Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: TabBarView(children: _kTabPages));
+              padding: const EdgeInsets.only(top: 10.0),
+              child: TabBarView(children: _kTabPages)
+            );
           },
         ),
       ),

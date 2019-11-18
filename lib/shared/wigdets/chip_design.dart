@@ -17,7 +17,9 @@ class ChipDesign extends StatelessWidget {
         label: Text(
           this.label,
           style: TextStyle(
-            color: Colors.white
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold
           ),
         ),
         backgroundColor: this.color,

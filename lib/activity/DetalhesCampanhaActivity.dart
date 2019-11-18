@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:adonate/shared/constants.dart';
+import 'package:adonate/campanhas/CampanhaModel.dart';
 
 class DetalheCampanhaActivity extends StatefulWidget {
   DetalheCampanhaActivity({this.campanha});
@@ -13,17 +14,11 @@ class DetalheCampanhaActivity extends StatefulWidget {
   final CampanhaModel campanha;
 
   @override
-  _DetalheCampanhaActivityState createState() =>
-      _DetalheCampanhaActivityState();
+  _DetalheCampanhaActivityState createState() => _DetalheCampanhaActivityState();
 }
 
 class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
   Completer<GoogleMapController> _controller = Completer();
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(-23.572599, -46.531885),
-    zoom: 18.4746,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -31,63 +26,73 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
     String period = 'Desde ${formatter.format(widget.campanha.start)}';
 
     if (widget.campanha.end != null) {
-      period =
-          'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
+      period = 'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
     }
+
+    final CameraPosition _kGooglePlex = CameraPosition(
+      target: LatLng(widget.campanha.lat, widget.campanha.lng),
+      zoom: 18.4746,
+    );
 
     final MarkerId markerId = MarkerId('marker_id_0');
 
     final Marker marker = Marker(
       markerId: markerId,
-      position: LatLng(-23.572599, -46.531885),
-      infoWindow: InfoWindow(title: widget.campanha.name, snippet: 'ONG'),
+      position: LatLng(widget.campanha.lat, widget.campanha.lng),
+      infoWindow: InfoWindow(title: widget.campanha.name, snippet: widget.campanha.adonatorName),
     );
 
     Set<Marker> markers = Set<Marker>();
     markers.add(marker);
+
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: primaryColor,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            iconTheme: IconThemeData(
+              color: Colors.white, //change your color here
+            ),
             pinned: true,
             snap: false,
             floating: false,
             expandedHeight: 160,
+            centerTitle: true,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.all(0.0),
+              centerTitle: true,
               title: Text(
                 widget.campanha.name,
-                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ),
           SliverList(
-              delegate: SliverChildListDelegate([
-            Container(
-              color: Colors.grey[300],
+            delegate: SliverChildListDelegate([
+            Card(
+              color: Colors.white,
+              elevation: 3,
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 16),
                     child: Text(
-                      'ONG X',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      period,
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                     child: Text(
-                      period,
-                      style: TextStyle(fontSize: 16),
+                      'Criado por: ${widget.campanha.adonatorName}',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
+                    padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       widget.campanha.description,
                       maxLines: 3,
+                      style: TextStyle(color: Colors.grey)
                     ),
                   ),
                 ],
@@ -96,17 +101,18 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
             ),
             Container(
               padding: EdgeInsets.all(15),
-              color: Colors.blue,
+              color: primaryColor,
               child: Center(
-                  child: Text(
-                'Localização',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              )),
+                child: Text(
+                  'Localização',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                )
+              ),
             ),
             Container(
               height: 300,
               width: 100,
-              color: Colors.blue,
+              color: primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: GoogleMap(
@@ -124,7 +130,8 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
               ),
             ),
             Container(
-              color: Colors.blue,
+              padding: const EdgeInsets.only(bottom: 18.0),
+              color: primaryColor,
               child: ButtonTheme.bar(
                 child: ButtonBar(
                   alignment: MainAxisAlignment.center,
@@ -135,18 +142,19 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
                         heroTag: 'email',
                         backgroundColor: Colors.orange,
                         onPressed: _launchEmail,
-                        elevation: 0,
+                        elevation: 3,
                         child: Icon(Icons.email),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 18.0),
                       child: FloatingActionButton(
-                          heroTag: 'call',
-                          backgroundColor: Colors.orange,
-                          onPressed: _launchCellphone,
-                          elevation: 0,
-                          child: Icon(Icons.call)),
+                        heroTag: 'call',
+                        backgroundColor: Colors.orange,
+                        onPressed: _launchCellphone,
+                        elevation: 3,
+                        child: Icon(Icons.call)
+                      ),
                     )
                   ],
                 ),
@@ -159,8 +167,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
   }
 
   _launchEmail() async {
-    String url =
-        'mailto:ongx@gmail.com?subject=Doação%20para%20${widget.campanha.name}&body=Quero%20doar%20estes%20itens:';
+    String url = 'mailto:${widget.campanha.adonatorEmail}?subject=Doação%20para%20${widget.campanha.name}&body=Quero%20doar%20estes%20itens:';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

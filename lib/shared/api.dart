@@ -3,12 +3,16 @@ import 'package:http/http.dart' as http;
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 
 class Api {
-  static getRequest(keyUrl) async {
+  static getRequest(keyUrl, { params }) async {
     String url = Urls.getUrl(keyUrl);
     String token = await SharedPreferencesHelper.get('token');
     var response;
 
     if (token == null) {
+      if (params != null) {
+        url = '$url $params';
+      }
+
       response = await http.get(url);
       return response;
     }

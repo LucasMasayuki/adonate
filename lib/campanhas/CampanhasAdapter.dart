@@ -1,3 +1,4 @@
+import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/wigdets/chip_design.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,12 +18,12 @@ class CampanhasAdapter extends StatelessWidget {
     String period = 'Desde ${formatter.format(campanha.start)}';
 
     if (campanha.end != null) {
-      period =
-          'De ${formatter.format(campanha.start)} \nAté ${formatter.format(campanha.end)}';
+      period = 'De ${formatter.format(campanha.start)} \nAté ${formatter.format(campanha.end)}';
     }
 
     return Card(
       color: Colors.white,
+      elevation: 3,
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -30,13 +31,15 @@ class CampanhasAdapter extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Positioned.fill(
-                    child: Container(
-                  color: Colors.blue,
+                  child: Container(
+                  color: primaryColor,
                 ))
               ],
             ),
           ),
+          Padding(padding: EdgeInsets.only(top: 5)),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
@@ -47,15 +50,18 @@ class CampanhasAdapter extends StatelessWidget {
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
                       campanha.name,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
-                    Text(period),
+                    Text(
+                      period,
+                      style: TextStyle(color: Colors.grey),
+                    ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                     Text(
                       campanha.description,
                       maxLines: 3,
+                      style: TextStyle(color: Colors.grey),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                   ],
@@ -67,18 +73,15 @@ class CampanhasAdapter extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       ChipDesign(
+                        color: ColorsHelper.hexToColor(campanha.purposeTagColor),
                         label: campanha.purposeTagName,
-                        color:
-                            ColorsHelper.hexToColor(campanha.purposeTagColor),
                       ),
                       ChipDesign(
+                        color: ColorsHelper.hexToColor(campanha.itemTypeTagColor),
                         label: campanha.itemTypeTagName,
-                        color:
-                            ColorsHelper.hexToColor(campanha.itemTypeTagColor),
                       ),
                     ],
                   ),

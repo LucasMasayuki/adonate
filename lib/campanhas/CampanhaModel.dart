@@ -7,6 +7,10 @@ class CampanhaModel {
   final String purposeTagName;
   final String itemTypeTagColor;
   final String purposeTagColor;
+  final double lat;
+  final double lng;
+  final String adonatorName;
+  final String adonatorEmail;
 
   const CampanhaModel({
     this.name,
@@ -16,6 +20,10 @@ class CampanhaModel {
     this.itemTypeTagName,
     this.purposeTagName,
     this.itemTypeTagColor,
-    this.purposeTagColor
+    this.purposeTagColor,
+    this.lat,
+    this.lng,
+    this.adonatorName,
+    this.adonatorEmail
   });
 }

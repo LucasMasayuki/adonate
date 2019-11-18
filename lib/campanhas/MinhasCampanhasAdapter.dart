@@ -11,49 +11,69 @@ class MinhasCampanhasAdapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat("dd/MM/yyyy h:mm a");
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  width: 1.0, color: Colors.grey, style: BorderStyle.solid))),
+    final formatter = DateFormat("dd/MM/yyyy");
+    double tagWidth = MediaQuery.of(context).size.width * 0.38;
+    double descriptionWidth = MediaQuery.of(context).size.width * 0.58;
+    String period = 'Desde ${formatter.format(campanha.start)}';
+
+    if (campanha.end != null) {
+      period = 'De ${formatter.format(campanha.start)} \nAté ${formatter.format(campanha.end)}';
+    }
+
+    return Card(
+      color: Colors.white,
+      elevation: 3,
       child: Column(
         children: <Widget>[
+          Padding(padding: EdgeInsets.only(top: 5)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.only(right: 20),
+                width: descriptionWidth,
                 child: Column(
                   children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
                       campanha.name,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    Text(formatter.format(campanha.start)),
+                    Padding(padding: EdgeInsets.only(bottom: 10)),
+                    Text(
+                      period,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Padding(padding: EdgeInsets.only(bottom: 10)),
                     Text(
                       campanha.description,
                       maxLines: 3,
+                      style: TextStyle(color: Colors.grey),
                     ),
+                    Padding(padding: EdgeInsets.only(bottom: 10)),
                   ],
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
               ),
               Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    ChipDesign(
-                      label: campanha.purposeTagName,
-                      color: ColorsHelper.hexToColor(campanha.purposeTagColor),
-                    ),
-                    ChipDesign(
-                      label: campanha.itemTypeTagName,
-                      color: ColorsHelper.hexToColor(campanha.itemTypeTagColor),
-                    )
-                  ],
+                width: tagWidth,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      ChipDesign(
+                        label: campanha.purposeTagName,
+                        color: ColorsHelper.hexToColor(campanha.purposeTagColor),
+                      ),
+                      ChipDesign(
+                        label: campanha.itemTypeTagName,
+                        color: ColorsHelper.hexToColor(campanha.itemTypeTagColor),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

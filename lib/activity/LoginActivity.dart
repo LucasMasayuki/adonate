@@ -119,21 +119,23 @@ class LoginActivityState extends State<LoginActivity> {
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: emailController,
-                    hintText: 'email',
-                    errorText: emailErrorMessage,
-                    contentPadding: defaultPaddingLoginTextField),
+                  controller: emailController,
+                  hintText: 'email',
+                  errorText: emailErrorMessage,
+                  contentPadding: defaultPaddingLoginTextField
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: passwordController,
-                    hintText: 'senha',
-                    errorText: passwordErrorMessage,
-                    obscureText: true,
-                    contentPadding: defaultPaddingLoginTextField),
+                  controller: passwordController,
+                  hintText: 'senha',
+                  errorText: passwordErrorMessage,
+                  obscureText: true,
+                  contentPadding: defaultPaddingLoginTextField
+                ),
               ),
             ),
             Padding(
@@ -143,45 +145,49 @@ class LoginActivityState extends State<LoginActivity> {
                 children: <Widget>[
                   Container(
                       child: RaisedGradientButton(
-                    child: Text(
-                      'Cadastrar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      child: Text(
+                        'Cadastrar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        primaryGradientColorButton,
-                        secondaryGradientColorButton,
-                      ],
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterActivity()));
-                    },
-                    padding: defaultPaddingRaisedButton,
-                  )),
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          primaryGradientColorButton,
+                          secondaryGradientColorButton,
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterActivity()
+                            )
+                        );
+                      },
+                      padding: defaultPaddingRaisedButton,
+                    )
+                  ),
                   Container(
                       child: RaisedGradientButton(
-                    child: Text(
-                      'Entrar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      child: Text(
+                        'Entrar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        primaryGradientColorButton,
-                        secondaryGradientColorButton,
-                      ],
-                    ),
-                    onPressed: () => login(),
-                    padding: defaultPaddingRaisedButton,
-                  )),
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          primaryGradientColorButton,
+                          secondaryGradientColorButton,
+                        ],
+                      ),
+                      onPressed: () => login(),
+                      padding: defaultPaddingRaisedButton,
+                    )
+                  ),
                 ],
               ),
             )
