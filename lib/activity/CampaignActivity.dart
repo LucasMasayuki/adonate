@@ -1,26 +1,24 @@
-import 'package:adonate/shared/api.dart';
-import 'package:adonate/shared/sharedPreferencesHelper.dart';
-import 'package:adonate/shared/wigdets/default_drawer.dart';
-import 'package:adonate/campanhas/MinhasCampanhasBodyWidget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-import 'package:adonate/campanhas/CampanhasBodyWidget.dart';
+import 'package:adonate/shared/wigdets/default_drawer.dart';
 
-import 'LoginActivity.dart';
+import 'package:adonate/campaign_widget/MyCampaignList.dart';
+import 'package:adonate/campaign_widget/CampaignList.dart';
 
-class CampanhasActivity extends StatefulWidget {
+class CampaignActivity extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => CampanhasActivityState();
+  State<StatefulWidget> createState() => CampaignActivityState();
 }
 
-class CampanhasActivityState extends State<CampanhasActivity> {
-  final _kTabPages = <Widget>[
-    CampanhasBodyWidget(),
-    MinhasCampanhasBodyWidget(),
+class CampaignActivityState extends State<CampaignActivity> {
+  final tabPages = <Widget>[
+    CampaignList(),
+    MyCampaignList(),
   ];
 
-  final _kTabs = <Tab>[
+  final tabs = <Tab>[
     Tab(
       icon: Icon(
         FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
@@ -34,17 +32,10 @@ class CampanhasActivityState extends State<CampanhasActivity> {
     )
   ];
 
-  logout() async {
-    await Api.postRequest('logout');
-    await SharedPreferencesHelper.remove('token');
-
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginActivity()));
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: _kTabPages.length,
+      length: tabPages.length,
       child: Scaffold(
         appBar: AppBar(
           actions: <Widget>[
@@ -59,7 +50,7 @@ class CampanhasActivityState extends State<CampanhasActivity> {
           bottom: TabBar(
             labelColor: Colors.white,
             indicatorColor: Colors.orange,
-            tabs: _kTabs,
+            tabs: tabs,
           ),
           iconTheme: IconThemeData(
             color: Colors.white,
@@ -74,10 +65,7 @@ class CampanhasActivityState extends State<CampanhasActivity> {
         ),
         body: Builder(
           builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: TabBarView(children: _kTabPages)
-            );
+            return TabBarView(children: tabPages);
           },
         ),
       ),

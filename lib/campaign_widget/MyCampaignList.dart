@@ -1,18 +1,17 @@
 import 'dart:convert';
 
-import 'package:adonate/activity/CriarCampanhaActivity.dart';
-import 'package:adonate/activity/DetalheMinhaCampanhaActivity.dart';
-import 'package:adonate/campanhas/CampanhaModel.dart';
-import 'package:adonate/campanhas/MinhasCampanhasAdapter.dart';
+import 'package:adonate/activity/CreateOrEditCampaignActivity.dart';
+import 'package:adonate/model/CampaignModel.dart';
+import 'package:adonate/adapter/MyCampaignAdapter.dart';
 import 'package:adonate/shared/api.dart';
 import 'package:flutter/material.dart';
 
-class MinhasCampanhasBodyWidget extends StatefulWidget {
+class MyCampaignList extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _MinhasCampanhasBodyWidgetState();
+  State<StatefulWidget> createState() => MyCampaignListState();
 }
 
-class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
+class MyCampaignListState extends State<MyCampaignList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +19,9 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
         backgroundColor: Colors.orange,
         heroTag: 'MinhasCampanhas',
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CriarCampanhaActivity()));
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) => CreateOrEditCampaignActivity())
+          );
         },
         child: Icon(Icons.add),
         elevation: 4,
@@ -30,13 +31,12 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
       body: FutureBuilder(
         future: Api.getRequest('get_campaigns_of_adonator'),
         builder: (context, projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none &&
-              projectSnap.hasData == null) {
-            return Container();
+          if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
+            return CircularProgressIndicator();
           }
 
           if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-            return Container();
+            return CircularProgressIndicator();
           }
 
           var resultList = jsonDecode(projectSnap.data.body);
@@ -49,18 +49,30 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
               var adonatorEmail = data[0].value.entries.toList()[2].value;
               var itemTypeTag = data[1].value[0].entries.toList()[0].value.entries.toList();
               var purposeTag = data[1].value[1].entries.toList()[0].value.entries.toList();
-              var lat = double.parse(data[3].value.entries.toList()[5].value);
-              var lng = double.parse(data[3].value.entries.toList()[6].value);
+              var address = data[3].value.entries.toList();
+              var zipcode = address[0].value;
+              var street = address[1].value;
+              var number = address[2].value;
+              var state = address[3].value;
+              var city = address[4].value;
+              var lat = double.parse(address[5].value);
+              var lng = double.parse(address[6].value);
 
-              CampanhaModel campanha = CampanhaModel(
+              CampaignModel campaign = CampaignModel(
+                id: data[0].value,
                 name: data[5].value,
                 description: data[6].value,
                 start: DateTime.parse(data[7].value),
                 end: DateTime.parse(data[8].value),
-                itemTypeTagName: itemTypeTag[0].value,
-                purposeTagName: purposeTag[0].value,
-                itemTypeTagColor: itemTypeTag[1].value,
-                purposeTagColor: purposeTag[1].value,
+                itemTypeTagName: itemTypeTag[1].value,
+                purposeTagName: purposeTag[1].value,
+                itemTypeTagColor: itemTypeTag[2].value,
+                purposeTagColor: purposeTag[2].value,
+                zipcode: zipcode,
+                street: street,
+                number: number,
+                state: state,
+                city: city,
                 lat: lat,
                 lng: lng,
                 adonatorName: adonatorName,
@@ -72,14 +84,14 @@ class _MinhasCampanhasBodyWidgetState extends State<MinhasCampanhasBodyWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetalheMinhaCampanhaActivity(
-                        campanha: campanha,
+                      builder: (context) => CreateOrEditCampaignActivity(
+                        campaign: campaign,
                       )
                     )
                   );
                 },
-                child: MinhasCampanhasAdapter(
-                  campanha: campanha,
+                child: MyCampaignAdapter(
+                  campaign: campaign,
                 ),
               );
             },

@@ -1,18 +1,17 @@
 import 'dart:convert';
-
-import 'package:adonate/activity/DetalhesCampanhaActivity.dart';
-import 'package:adonate/campanhas/CampanhaModel.dart';
 import 'package:flutter/material.dart';
+
+import 'package:adonate/activity/CampaignDetailActivity.dart';
 import 'package:adonate/shared/api.dart';
+import 'package:adonate/adapter/CampaignAdapter.dart';
+import 'package:adonate/model/CampaignModel.dart';
 
-import 'CampanhasAdapter.dart';
-
-class CampanhasBodyWidget extends StatefulWidget {
+class CampaignList extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _CampanhasBodyWidgetState();
+  State<StatefulWidget> createState() => CampaignListState();
 }
 
-class _CampanhasBodyWidgetState extends State<CampanhasBodyWidget> {
+class CampaignListState extends State<CampaignList> {
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +19,12 @@ class _CampanhasBodyWidgetState extends State<CampanhasBodyWidget> {
       body: FutureBuilder(
         future: Api.getRequest('campaigns'),
         builder: (context, projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none &&
-              projectSnap.hasData == null) {
-            return Container();
+          if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
+            return CircularProgressIndicator();
           }
 
           if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-            return Container();
+            return CircularProgressIndicator();
           }
 
           Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
@@ -43,15 +41,15 @@ class _CampanhasBodyWidgetState extends State<CampanhasBodyWidget> {
               var lat = double.parse(data[3].value.entries.toList()[5].value);
               var lng = double.parse(data[3].value.entries.toList()[6].value);
 
-              CampanhaModel campanha = CampanhaModel(
+              CampaignModel campaign = CampaignModel(
                 name: data[5].value,
                 description: data[6].value,
                 start: DateTime.parse(data[7].value),
                 end: DateTime.parse(data[8].value),
-                itemTypeTagName: itemTypeTag[0].value,
-                purposeTagName: purposeTag[0].value,
-                itemTypeTagColor: itemTypeTag[1].value,
-                purposeTagColor: purposeTag[1].value,
+                itemTypeTagName: itemTypeTag[1].value,
+                purposeTagName: purposeTag[1].value,
+                itemTypeTagColor: itemTypeTag[2].value,
+                purposeTagColor: purposeTag[2].value,
                 lat: lat,
                 lng: lng,
                 adonatorName: adonatorName,
@@ -63,14 +61,14 @@ class _CampanhasBodyWidgetState extends State<CampanhasBodyWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetalheCampanhaActivity(
-                        campanha: campanha,
+                      builder: (context) => CampaignDetailActivity(
+                        campaign: campaign,
                       )
                     )
                   );
                 },
-                child: CampanhasAdapter(
-                  campanha: campanha,
+                child: CampaignAdapter(
+                  campaign: campaign,
                 ),
               );
             },

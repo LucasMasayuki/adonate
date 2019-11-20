@@ -6,6 +6,7 @@ class Urls {
     'logout': 'logout/',
     'auth': 'api/auth',
     'campaigns': 'api/campaigns/',
+    'tags': 'api/tags/',
     'get_campaigns_of_adonator': 'api/get_campaigns_adonator',
   };
 

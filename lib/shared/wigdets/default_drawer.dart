@@ -1,6 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 import 'package:adonate/activity/LoginActivity.dart';
@@ -15,11 +16,11 @@ class DefaultDrawer extends StatelessWidget {
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.none &&
             projectSnap.hasData == null) {
-          return Container();
+          return CircularProgressIndicator();
         }
 
         if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-          return Container();
+          return CircularProgressIndicator();
         }
 
         Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
@@ -56,8 +57,15 @@ class DefaultDrawer extends StatelessWidget {
             style: TextStyle(color: Colors.grey),
           ),
           onTap: () async {
+              var progressDialog = new ProgressDialog(context);
+              progressDialog.style(
+                message: 'Saindo...',
+              );
+
+              progressDialog.show();
               await Api.postRequest('logout');
               await SharedPreferencesHelper.remove('token');
+              progressDialog.hide();
 
               Navigator.push(
                 context,

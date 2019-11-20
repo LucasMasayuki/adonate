@@ -1,36 +1,37 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'package:adonate/shared/constants.dart';
-import 'package:adonate/campanhas/CampanhaModel.dart';
+import 'package:adonate/model/CampaignModel.dart';
 
-class DetalheCampanhaActivity extends StatefulWidget {
-  DetalheCampanhaActivity({this.campanha});
+class CampaignDetailActivity extends StatefulWidget {
+  CampaignDetailActivity({this.campaign});
 
-  final CampanhaModel campanha;
+  final CampaignModel campaign;
 
   @override
-  _DetalheCampanhaActivityState createState() => _DetalheCampanhaActivityState();
+  CampaignDetailActivityState createState() => CampaignDetailActivityState();
 }
 
-class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
+class CampaignDetailActivityState extends State<CampaignDetailActivity> {
   Completer<GoogleMapController> _controller = Completer();
 
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat("dd/MM/yyyy");
-    String period = 'Desde ${formatter.format(widget.campanha.start)}';
+    String period = 'Desde ${formatter.format(widget.campaign.start)}';
 
-    if (widget.campanha.end != null) {
-      period = 'De ${formatter.format(widget.campanha.start)} \nAté ${formatter.format(widget.campanha.end)}';
+    if (widget.campaign.end != null) {
+      period = 'De ${formatter.format(widget.campaign.start)} \nAté ${formatter.format(widget.campaign.end)}';
     }
 
     final CameraPosition _kGooglePlex = CameraPosition(
-      target: LatLng(widget.campanha.lat, widget.campanha.lng),
+      target: LatLng(widget.campaign.lat, widget.campaign.lng),
       zoom: 18.4746,
     );
 
@@ -38,8 +39,8 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
 
     final Marker marker = Marker(
       markerId: markerId,
-      position: LatLng(widget.campanha.lat, widget.campanha.lng),
-      infoWindow: InfoWindow(title: widget.campanha.name, snippet: widget.campanha.adonatorName),
+      position: LatLng(widget.campaign.lat, widget.campaign.lng),
+      infoWindow: InfoWindow(title: widget.campaign.name, snippet: widget.campaign.adonatorName),
     );
 
     Set<Marker> markers = Set<Marker>();
@@ -61,7 +62,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
-                widget.campanha.name,
+                widget.campaign.name,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
@@ -82,7 +83,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
                   ),
                   Padding(
                     child: Text(
-                      'Criado por: ${widget.campanha.adonatorName}',
+                      'Criado por: ${widget.campaign.adonatorName}',
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     padding: const EdgeInsets.only(right: 8.0, left: 8.0),
@@ -90,7 +91,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      widget.campanha.description,
+                      widget.campaign.description,
                       maxLines: 3,
                       style: TextStyle(color: Colors.grey)
                     ),
@@ -167,7 +168,7 @@ class _DetalheCampanhaActivityState extends State<DetalheCampanhaActivity> {
   }
 
   _launchEmail() async {
-    String url = 'mailto:${widget.campanha.adonatorEmail}?subject=Doação%20para%20${widget.campanha.name}&body=Quero%20doar%20estes%20itens:';
+    String url = 'mailto:${widget.campaign.adonatorEmail}?subject=Doação%20para%20${widget.campaign.name}&body=Quero%20doar%20estes%20itens:';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

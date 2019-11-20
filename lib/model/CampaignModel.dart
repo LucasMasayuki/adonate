@@ -1,4 +1,5 @@
-class CampanhaModel {
+class CampaignModel {
+  final int id;
   final String name;
   final DateTime start;
   final DateTime end;
@@ -9,10 +10,16 @@ class CampanhaModel {
   final String purposeTagColor;
   final double lat;
   final double lng;
+  final int zipcode;
+  final String street;
+  final String city;
+  final int number;
+  final String state;
   final String adonatorName;
   final String adonatorEmail;
 
-  const CampanhaModel({
+  const CampaignModel({
+    this.id,
     this.name,
     this.start,
     this.end,
@@ -23,6 +30,11 @@ class CampanhaModel {
     this.purposeTagColor,
     this.lat,
     this.lng,
+    this.zipcode,
+    this.street,
+    this.city,
+    this.number,
+    this.state,
     this.adonatorName,
     this.adonatorEmail
   });

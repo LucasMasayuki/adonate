@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:adonate/activity/LoginActivity.dart';
-import 'package:adonate/activity/CampanhasActivity.dart';
+import 'package:adonate/activity/CampaignActivity.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 import 'package:adonate/shared/constants.dart';
 
@@ -12,7 +12,7 @@ void main() async {
   activity = LoginActivity();
 
   if (isLogged) {
-    activity = CampanhasActivity();
+    activity = CampaignActivity();
   }
 
   runApp(MyApp());

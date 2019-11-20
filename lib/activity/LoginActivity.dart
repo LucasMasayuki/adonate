@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart';
 
-import 'package:adonate/activity/CampanhasActivity.dart';
+import 'package:adonate/activity/CampaignActivity.dart';
 import 'package:adonate/activity/RegisterActivity.dart';
+
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
-import 'package:adonate/shared/constants.dart';
+
 import 'package:adonate/shared/api.dart';
-import 'package:adonate/shared/sharedPreferencesHelper.dart';
+import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/errorMessages.dart';
+import 'package:adonate/shared/sharedPreferencesHelper.dart';
 
 class LoginActivity extends StatefulWidget {
   @override
@@ -44,23 +45,24 @@ class LoginActivityState extends State<LoginActivity> {
     if (response.statusCode == 500) {
       progressDialog.hide();
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            // return object of type Dialog
-            return AlertDialog(
-              title: Text("Algo deu errado"),
-              content: Text("Tente novamente mais tarde"),
-              actions: <Widget>[
-                // define os botões na base do dialogo
-                new FlatButton(
-                  child: new Text("ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text("Algo deu errado"),
+            content: Text("Tente novamente mais tarde"),
+            actions: <Widget>[
+              // define os botões na base do dialogo
+              new FlatButton(
+                child: new Text("ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+      );
 
       return;
     }
@@ -89,8 +91,7 @@ class LoginActivityState extends State<LoginActivity> {
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => CampanhasActivity()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CampaignActivity()));
   }
 
   @override
@@ -160,10 +161,10 @@ class LoginActivityState extends State<LoginActivity> {
                       ),
                       onPressed: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterActivity()
-                            )
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterActivity()
+                          )
                         );
                       },
                       padding: defaultPaddingRaisedButton,
