@@ -4,8 +4,10 @@ class Urls {
     'login': 'login/',
     'register': 'register',
     'logout': 'logout/',
+    'auth': 'api/auth',
     'campaigns': 'api/campaigns/',
-    'auth': 'api/auth/'
+    'tags': 'api/tags/',
+    'get_campaigns_of_adonator': 'api/get_campaigns_adonator',
   };
 
   static getUrl(key) {

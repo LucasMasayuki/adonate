@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart';
 
-import 'package:adonate/activity/CampanhasActivity.dart';
+import 'package:adonate/activity/CampaignActivity.dart';
 import 'package:adonate/activity/RegisterActivity.dart';
+
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
-import 'package:adonate/shared/constants.dart';
+
 import 'package:adonate/shared/api.dart';
-import 'package:adonate/shared/sharedPreferencesHelper.dart';
+import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/errorMessages.dart';
+import 'package:adonate/shared/sharedPreferencesHelper.dart';
 
 class LoginActivity extends StatefulWidget {
   @override
@@ -44,23 +45,24 @@ class LoginActivityState extends State<LoginActivity> {
     if (response.statusCode == 500) {
       progressDialog.hide();
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            // return object of type Dialog
-            return AlertDialog(
-              title: Text("Algo deu errado"),
-              content: Text("Tente novamente mais tarde"),
-              actions: <Widget>[
-                // define os botões na base do dialogo
-                new FlatButton(
-                  child: new Text("ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text("Algo deu errado"),
+            content: Text("Tente novamente mais tarde"),
+            actions: <Widget>[
+              // define os botões na base do dialogo
+              new FlatButton(
+                child: new Text("ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+      );
 
       return;
     }
@@ -89,8 +91,7 @@ class LoginActivityState extends State<LoginActivity> {
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => CampanhasActivity()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CampaignActivity()));
   }
 
   @override
@@ -119,21 +120,23 @@ class LoginActivityState extends State<LoginActivity> {
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: emailController,
-                    hintText: 'email',
-                    errorText: emailErrorMessage,
-                    contentPadding: defaultPaddingLoginTextField),
+                  controller: emailController,
+                  hintText: 'email',
+                  errorText: emailErrorMessage,
+                  contentPadding: defaultPaddingLoginTextField
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: passwordController,
-                    hintText: 'senha',
-                    errorText: passwordErrorMessage,
-                    obscureText: true,
-                    contentPadding: defaultPaddingLoginTextField),
+                  controller: passwordController,
+                  hintText: 'senha',
+                  errorText: passwordErrorMessage,
+                  obscureText: true,
+                  contentPadding: defaultPaddingLoginTextField
+                ),
               ),
             ),
             Padding(
@@ -143,45 +146,49 @@ class LoginActivityState extends State<LoginActivity> {
                 children: <Widget>[
                   Container(
                       child: RaisedGradientButton(
-                    child: Text(
-                      'Cadastrar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      child: Text(
+                        'Cadastrar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        primaryGradientColorButton,
-                        secondaryGradientColorButton,
-                      ],
-                    ),
-                    onPressed: () {
-                      Navigator.push(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          primaryGradientColorButton,
+                          secondaryGradientColorButton,
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RegisterActivity()));
-                    },
-                    padding: defaultPaddingRaisedButton,
-                  )),
+                            builder: (context) => RegisterActivity()
+                          )
+                        );
+                      },
+                      padding: defaultPaddingRaisedButton,
+                    )
+                  ),
                   Container(
                       child: RaisedGradientButton(
-                    child: Text(
-                      'Entrar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      child: Text(
+                        'Entrar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        primaryGradientColorButton,
-                        secondaryGradientColorButton,
-                      ],
-                    ),
-                    onPressed: () => login(),
-                    padding: defaultPaddingRaisedButton,
-                  )),
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          primaryGradientColorButton,
+                          secondaryGradientColorButton,
+                        ],
+                      ),
+                      onPressed: () => login(),
+                      padding: defaultPaddingRaisedButton,
+                    )
+                  ),
                 ],
               ),
             )

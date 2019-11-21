@@ -1,28 +1,30 @@
-import 'package:adonate/shared/wigdets/chip_design.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'package:adonate/model/CampaignModel.dart';
+
 import 'package:adonate/shared/colorsHelper.dart';
+import 'package:adonate/shared/wigdets/chip_design.dart';
 
-import 'CampanhaModel.dart';
-
-class CampanhasAdapter extends StatelessWidget {
-  const CampanhasAdapter({this.campanha});
-  final CampanhaModel campanha;
+class CampaignAdapter extends StatelessWidget {
+  const CampaignAdapter({this.campaign});
+  final CampaignModel campaign;
 
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat("dd/MM/yyyy");
     double tagWidth = MediaQuery.of(context).size.width * 0.38;
     double descriptionWidth = MediaQuery.of(context).size.width * 0.58;
-    String period = 'Desde ${formatter.format(campanha.start)}';
+    String period = 'Desde ${formatter.format(campaign.start)}';
 
-    if (campanha.end != null) {
-      period =
-          'De ${formatter.format(campanha.start)} \nAté ${formatter.format(campanha.end)}';
+    if (campaign.end != null) {
+      period = 'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end)}';
     }
 
     return Card(
       color: Colors.white,
+      elevation: 3,
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -30,13 +32,21 @@ class CampanhasAdapter extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Positioned.fill(
-                    child: Container(
-                  color: Colors.blue,
-                ))
+                  child: Card(
+                    color: Colors.grey,
+                    child: CachedNetworkImage(
+                      imageUrl: campaign.photoUrl,
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.image),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
+          Padding(padding: EdgeInsets.only(top: 5)),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
@@ -46,16 +56,19 @@ class CampanhasAdapter extends StatelessWidget {
                   children: <Widget>[
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
-                      campanha.name,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      campaign.name,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
-                    Text(period),
+                    Text(
+                      period,
+                      style: TextStyle(color: Colors.grey),
+                    ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                     Text(
-                      campanha.description,
+                      campaign.description,
                       maxLines: 3,
+                      style: TextStyle(color: Colors.grey),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                   ],
@@ -67,18 +80,15 @@ class CampanhasAdapter extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       ChipDesign(
-                        label: campanha.purposeTagName,
-                        color:
-                            ColorsHelper.hexToColor(campanha.purposeTagColor),
+                        color: ColorsHelper.hexToColor(campaign.purposeTagColor),
+                        label: campaign.purposeTagName,
                       ),
                       ChipDesign(
-                        label: campanha.itemTypeTagName,
-                        color:
-                            ColorsHelper.hexToColor(campanha.itemTypeTagColor),
+                        color: ColorsHelper.hexToColor(campaign.itemTypeTagColor),
+                        label: campaign.itemTypeTagName,
                       ),
                     ],
                   ),

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
@@ -11,20 +10,17 @@ import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/errorMessages.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
-import 'package:adonate/activity/CampanhasActivity.dart';
+import 'package:adonate/activity/CampaignActivity.dart';
 
 class RegisterActivity extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => RegisterActivityState();
 }
 class RegisterActivityState extends State<RegisterActivity> {
-  final loginController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
-  var maskFormatter = new MaskTextInputFormatter(mask: '###.###.###-###');
 
   String usernameErrorMessage;
   String emailErrorMessage;
@@ -68,12 +64,15 @@ class RegisterActivityState extends State<RegisterActivity> {
       });
 
       progressDialog.hide();
+      return;
     }
 
     await SharedPreferencesHelper.save('token', body['key']);
 
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CampanhasActivity()));
+        context, MaterialPageRoute(builder: (context) => CampaignActivity()
+      )
+    );
   }
 
   @override
@@ -117,66 +116,49 @@ class RegisterActivityState extends State<RegisterActivity> {
               padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: nameController,
-                    hintText: 'Nome',
-                    textCapitalization: TextCapitalization.words,
-                    keyboardType: TextInputType.text,
-                    contentPadding: defaultPaddingFormTextField,
-                    errorText: usernameErrorMessage),
+                  controller: nameController,
+                  hintText: 'Nome',
+                  textCapitalization: TextCapitalization.words,
+                  keyboardType: TextInputType.text,
+                  contentPadding: defaultPaddingFormTextField,
+                  errorText: usernameErrorMessage
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: emailController,
-                    hintText: 'E-mail',
-                    keyboardType: TextInputType.emailAddress,
-                    contentPadding: defaultPaddingFormTextField,
-                    errorText: emailErrorMessage),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(40, 15, 40, 0),
-              child: Center(
-                child: TextFormFieldCustom(
-                    controller: loginController,
-                    hintText: 'CPF/CNPJ',
-                    maxLength: 18,
-                    inputFormatters: [maskFormatter],
-                    onChanged: (value) {
-                      if (value.length > 14) {
-                        loginController.value =
-                            maskFormatter.updateMask("##.###.###/####-##");
-                      } else {
-                        loginController.value =
-                            maskFormatter.updateMask("###.###.###-###");
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    contentPadding: defaultPaddingFormTextField),
+                  controller: emailController,
+                  hintText: 'E-mail',
+                  keyboardType: TextInputType.emailAddress,
+                  contentPadding: defaultPaddingFormTextField,
+                  errorText: emailErrorMessage
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: passwordController,
-                    hintText: 'Senha',
-                    obscureText: true,
-                    contentPadding: defaultPaddingFormTextField,
-                    errorText: password1ErrorMessage),
+                  controller: passwordController,
+                  hintText: 'Senha',
+                  obscureText: true,
+                  contentPadding: defaultPaddingFormTextField,
+                  errorText: password1ErrorMessage
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                    controller: confirmPasswordController,
-                    hintText: 'Confirmar senha',
-                    obscureText: true,
-                    contentPadding: defaultPaddingFormTextField,
-                    errorText: password2ErrorMessage),
+                  controller: confirmPasswordController,
+                  hintText: 'Confirmar senha',
+                  obscureText: true,
+                  contentPadding: defaultPaddingFormTextField,
+                  errorText: password2ErrorMessage
+                ),
               ),
             ),
             Padding(
