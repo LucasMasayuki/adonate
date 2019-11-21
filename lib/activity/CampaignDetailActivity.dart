@@ -27,12 +27,13 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
     String period = 'Desde ${formatter.format(widget.campaign.start)}';
 
     if (widget.campaign.end != null) {
-      period = 'De ${formatter.format(widget.campaign.start)} \nAté ${formatter.format(widget.campaign.end)}';
+      period =
+          'De ${formatter.format(widget.campaign.start)} \nAté ${formatter.format(widget.campaign.end)}';
     }
 
     final CameraPosition _kGooglePlex = CameraPosition(
       target: LatLng(widget.campaign.lat, widget.campaign.lng),
-      zoom: 18.4746,
+      zoom: 15.4746,
     );
 
     final MarkerId markerId = MarkerId('marker_id_0');
@@ -40,7 +41,8 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
     final Marker marker = Marker(
       markerId: markerId,
       position: LatLng(widget.campaign.lat, widget.campaign.lng),
-      infoWindow: InfoWindow(title: widget.campaign.name, snippet: widget.campaign.adonatorName),
+      infoWindow: InfoWindow(
+          title: widget.campaign.name, snippet: widget.campaign.adonatorName),
     );
 
     Set<Marker> markers = Set<Marker>();
@@ -63,7 +65,10 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
               centerTitle: true,
               title: Text(
                 widget.campaign.name,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               background: Image.network(
                 widget.campaign.photoUrl,
@@ -72,14 +77,15 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
             ),
           ),
           SliverList(
-            delegate: SliverChildListDelegate([
+              delegate: SliverChildListDelegate([
             Card(
               color: Colors.white,
               elevation: 3,
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 16),
+                    padding:
+                        const EdgeInsets.only(right: 8.0, left: 8.0, top: 16),
                     child: Text(
                       period,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
@@ -94,11 +100,8 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.campaign.description,
-                      maxLines: 3,
-                      style: TextStyle(color: Colors.grey)
-                    ),
+                    child: Text(widget.campaign.description,
+                        maxLines: 3, style: TextStyle(color: Colors.grey)),
                   ),
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,11 +111,10 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
               padding: EdgeInsets.all(15),
               color: primaryColor,
               child: Center(
-                child: Text(
-                  'Localização',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                )
-              ),
+                  child: Text(
+                'Localização',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              )),
             ),
             Container(
               height: 300,
@@ -154,12 +156,11 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
                     Padding(
                       padding: const EdgeInsets.only(left: 18.0),
                       child: FloatingActionButton(
-                        heroTag: 'call',
-                        backgroundColor: Colors.orange,
-                        onPressed: _launchCellphone,
-                        elevation: 3,
-                        child: Icon(Icons.call)
-                      ),
+                          heroTag: 'call',
+                          backgroundColor: Colors.orange,
+                          onPressed: _launchCellphone,
+                          elevation: 3,
+                          child: Icon(Icons.call)),
                     )
                   ],
                 ),
@@ -172,7 +173,8 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
   }
 
   _launchEmail() async {
-    String url = 'mailto:${widget.campaign.adonatorEmail}?subject=Doação%20para%20${widget.campaign.name}&body=Quero%20doar%20estes%20itens:';
+    String url =
+        'mailto:${widget.campaign.adonatorEmail}?subject=Doação%20para%20${widget.campaign.name}&body=Quero%20doar%20estes%20itens:';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
