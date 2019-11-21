@@ -37,7 +37,7 @@ class CampaignAdapter extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: campaign.photoUrl,
                       placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) => Icon(Icons.image),
                     ),
                   ),
                 )

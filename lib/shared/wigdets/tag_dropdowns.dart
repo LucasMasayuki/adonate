@@ -23,7 +23,6 @@ class TagDropdowns extends StatelessWidget {
             child: Center(
               child: DropdownButton(
                 hint: Text('Para quem', style: TextStyle(fontSize: 12, color: Colors.black)),
-                value: this.defaultPurpouseTagValue,
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 items: tags
                   .where((value) => value.entries.toList()[3].value == "PURPOSE")
@@ -49,7 +48,6 @@ class TagDropdowns extends StatelessWidget {
             child: Center(
               child: DropdownButton(
                 hint: Text('O que doar', style: TextStyle(fontSize: 12, color: Colors.black)),
-                value: this.defaultItemTypeTagValue,
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 items: tags
                   .where((value) => value.entries.toList()[3].value == "ITEM")

@@ -58,6 +58,11 @@ class MyCampaignListState extends State<MyCampaignList> {
               var lat = double.parse(address[5].value);
               var lng = double.parse(address[6].value);
 
+              var photoUrl = '';
+              if (data[2].value.length != 0) {
+                photoUrl = data[2].value[0].entries.toList()[0].value.entries.toList()[0].value;
+              }
+
               CampaignModel campaign = CampaignModel(
                 id: data[0].value.entries.toList()[0].value,
                 name: data[5].value,
@@ -77,6 +82,7 @@ class MyCampaignListState extends State<MyCampaignList> {
                 lng: lng,
                 adonatorName: adonatorName,
                 adonatorEmail: adonatorEmail,
+                photoUrl: photoUrl,
               );
 
               return GestureDetector(

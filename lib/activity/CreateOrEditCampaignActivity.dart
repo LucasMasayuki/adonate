@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:adonate/shared/wigdets/tag_dropdowns.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,8 +42,8 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
 
   String _valorProposeTag;
   String _valorTypeItemTag;
-  File _image;
   int currentStep = 0;
+  File _image;
 
   @override
   void initState() {
@@ -71,7 +72,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
           color: Colors.white, //change your color here
         ),
         title: Text(
-          widget.campaign != null ? 'Editar ${widget.campaign.name}' : 'Adicionar campaign',
+          widget.campaign != null ? 'Editar ${widget.campaign.name}' : 'Adicionar campanha',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -93,25 +94,42 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
     return Column(
       children: <Widget>[
         ListTile(
-          title: Text("Imagem da campaign"),
+          title: Text("Imagem da campanha"),
         ),
         GestureDetector(
           onTap: _getImage,
-          child: Container(
-            color: Colors.grey,
-            margin: EdgeInsets.only(bottom: 16.0),
-            width: 200,
-            height: 150,
-            child: Center(
-              child: (_image == null
-                ? Text('Selecione uma imagem')
-                : Image.file(_image)
-              ),
+          child: SizedBox(
+            height: 120,
+            child: Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: Card(
+                    color: Colors.grey,
+                    child: returnPhotoOfFileOrUrl()
+                  )
+                ),
+              ],
             ),
-          ),
+          )
         )
       ],
     );
+  }
+
+  Widget returnPhotoOfFileOrUrl() {
+    if (widget.campaign.photoUrl != null && _image == null) {
+      return CachedNetworkImage(
+        imageUrl: widget.campaign.photoUrl,
+        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+        errorWidget: (context, url, error) => Icon(Icons.image),
+      );
+    }
+
+    if (_image == null) {
+      return Center(child: Text('Selecione uma imagem'));
+    }
+
+    return Image.file(_image);
   }
 
   _getImage() async {
@@ -204,15 +222,16 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
     ),
     Step(
       title: Text("Informações adicionais"),
-      content: Column(
-        children: <Widget>[
-          Card(
-            child: _returnImageOfcampaign(),
-          ),
-          Card(
-            margin: EdgeInsets.only(bottom: 12.0),
-            child: Column(
+      content: Card(
+        margin: EdgeInsets.all(12.0),
+        child: Column(
+          children: <Widget>[
+             _returnImageOfcampaign(),
+             Column(
               children: <Widget>[
+                ListTile(
+                  title: Text("Tags da campanha")
+                ),
                 FutureBuilder(
                   future: Api.getRequest('tags'),
                   builder: (context, projectSnap) {
@@ -226,13 +245,18 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
 
                     Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
                     var tags = body.entries.toList()[3].value;
-                    return TagDropdowns(tags: tags);
+
+                    return TagDropdowns(
+                      tags: tags,
+                      defaultPurpouseTagValue: widget.campaign.itemTypeTagName,
+                      defaultItemTypeTagValue: widget.campaign.purposeTagName
+                    );
                   }
                 )
               ]
             )
-          )
-        ],
+          ],
+        ),
       ),
     ),
     Step(
