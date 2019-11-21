@@ -1,4 +1,5 @@
 
+import 'package:adonate/activity/FilterActivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -44,7 +45,11 @@ class CampaignActivityState extends State<CampaignActivity> {
                 Icons.search,
                 color: Colors.white
               ),
-              onPressed: () => { },
+              onPressed: () => {
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => FilterActivity())
+                )
+              },
             ),
           ],
           bottom: TabBar(

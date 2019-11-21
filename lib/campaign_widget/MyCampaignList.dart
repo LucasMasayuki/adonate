@@ -32,11 +32,11 @@ class MyCampaignListState extends State<MyCampaignList> {
         future: Api.getRequest('get_campaigns_of_adonator'),
         builder: (context, projectSnap) {
           if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           var resultList = jsonDecode(projectSnap.data.body);
@@ -59,7 +59,7 @@ class MyCampaignListState extends State<MyCampaignList> {
               var lng = double.parse(address[6].value);
 
               CampaignModel campaign = CampaignModel(
-                id: data[0].value,
+                id: data[0].value.entries.toList()[0].value,
                 name: data[5].value,
                 description: data[6].value,
                 start: DateTime.parse(data[7].value),

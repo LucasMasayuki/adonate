@@ -65,6 +65,10 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
                 widget.campaign.name,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               ),
+              background: Image.network(
+                widget.campaign.photoUrl,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SliverList(

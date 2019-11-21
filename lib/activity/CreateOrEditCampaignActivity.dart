@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:adonate/shared/wigdets/tag_dropdowns.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +37,6 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
   final scrollDirection = Axis.horizontal;
 
   var steps;
-  var tags = [];
   var progressDialog;
 
   String _valorProposeTag;
@@ -62,7 +62,6 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
   Widget build(BuildContext context) {
     progressDialog = new ProgressDialog(context);
     steps = getSteps();
-    getTags();
 
     return Scaffold(
       appBar: AppBar(
@@ -123,19 +122,6 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
     setState(() {
       _image = image;
     });
-  }
-
-  getTags() async {
-    var response = await Api.getRequest('tags');
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> body = jsonDecode(response.body);
-      var responseList = body.entries.toList()[3].value;
-
-      setState(() {
-        tags = responseList;
-      });
-    }
   }
 
   getSteps() => [
@@ -227,69 +213,22 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
             margin: EdgeInsets.only(bottom: 12.0),
             child: Column(
               children: <Widget>[
-                ListTile(
-                  title: Text("Tags da campaign"),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 16.0, top: 12.0),
-                        child: Center(
-                          child: DropdownButton(
-                            hint: Text('Para quem'),
-                            value: _valorProposeTag,
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                            items: tags
-                              .where((value) => value.entries.toList()[3].value == "PURPOSE")
-                              .map((value) {
-                                var tag = value.entries.toList();
-                                return DropdownMenuItem<String>(
-                                  value: tag[1].value,
-                                  child: Text(tag[1].value),
-                                );
-                              }
-                            ).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _valorProposeTag = value;
-                              });
-                            }
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 16.0, top: 12.0),
-                        child: Center(
-                          child: DropdownButton(
-                            hint: Text('O que'),
-                            value: _valorTypeItemTag,
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                            items: tags
-                              .where((value) => value.entries.toList()[3].value == "ITEM")
-                              .map((value) {
-                                var tag = value.entries.toList();
-                                return DropdownMenuItem<String>(
-                                  value: tag[1].value,
-                                  child: Text(tag[1].value),
-                                );
-                              }
-                            ).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _valorTypeItemTag = value;
-                              });
-                            }
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]
-                ),
+                FutureBuilder(
+                  future: Api.getRequest('tags'),
+                  builder: (context, projectSnap) {
+                    if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
+                    var tags = body.entries.toList()[3].value;
+                    return TagDropdowns(tags: tags);
+                  }
+                )
               ]
             )
           )

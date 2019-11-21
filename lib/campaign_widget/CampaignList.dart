@@ -20,11 +20,11 @@ class CampaignListState extends State<CampaignList> {
         future: Api.getRequest('campaigns'),
         builder: (context, projectSnap) {
           if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
@@ -41,6 +41,11 @@ class CampaignListState extends State<CampaignList> {
               var lat = double.parse(data[3].value.entries.toList()[5].value);
               var lng = double.parse(data[3].value.entries.toList()[6].value);
 
+              var photoUrl = '';
+              if (data[2].value.length != 0) {
+                photoUrl = data[2].value[0].entries.toList()[0].value.entries.toList()[0].value;
+              }
+
               CampaignModel campaign = CampaignModel(
                 name: data[5].value,
                 description: data[6].value,
@@ -54,6 +59,7 @@ class CampaignListState extends State<CampaignList> {
                 lng: lng,
                 adonatorName: adonatorName,
                 adonatorEmail: adonatorEmail,
+                photoUrl: photoUrl,
               );
 
               return GestureDetector(

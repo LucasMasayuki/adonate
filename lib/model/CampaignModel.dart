@@ -17,6 +17,7 @@ class CampaignModel {
   final String state;
   final String adonatorName;
   final String adonatorEmail;
+  final String photoUrl;
 
   const CampaignModel({
     this.id,
@@ -36,6 +37,7 @@ class CampaignModel {
     this.number,
     this.state,
     this.adonatorName,
-    this.adonatorEmail
+    this.adonatorEmail,
+    this.photoUrl
   });
 }

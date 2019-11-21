@@ -1,10 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:adonate/model/CampaignModel.dart';
 
 import 'package:adonate/shared/colorsHelper.dart';
-import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/wigdets/chip_design.dart';
 
 class CampaignAdapter extends StatelessWidget {
@@ -32,9 +32,15 @@ class CampaignAdapter extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Positioned.fill(
-                  child: Container(
-                  color: primaryColor,
-                ))
+                  child: Card(
+                    color: Colors.grey,
+                    child: CachedNetworkImage(
+                      imageUrl: campaign.photoUrl,
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

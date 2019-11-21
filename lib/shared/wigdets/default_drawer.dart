@@ -16,11 +16,11 @@ class DefaultDrawer extends StatelessWidget {
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.none &&
             projectSnap.hasData == null) {
-          return CircularProgressIndicator();
+          return Center( child: CircularProgressIndicator());
         }
 
         if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-          return CircularProgressIndicator();
+          return Center( child: CircularProgressIndicator());
         }
 
         Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
@@ -67,11 +67,12 @@ class DefaultDrawer extends StatelessWidget {
               await SharedPreferencesHelper.remove('token');
               progressDialog.hide();
 
-              Navigator.push(
-                context,
+              Navigator.pushAndRemoveUntil(
+                context, 
                 MaterialPageRoute(
                   builder: (context) => LoginActivity()
-                )
+                ),
+                ModalRoute.withName("/Login")
               );
           }
         ),
