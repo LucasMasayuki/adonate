@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: primaryColor,
         hintColor: Colors.white,
+        scaffoldBackgroundColor: Colors.grey[100],
+        cardColor: Colors.white,
         appBarTheme: AppBarTheme(color: primaryColor, elevation: 0),
       ),
       home: activity,

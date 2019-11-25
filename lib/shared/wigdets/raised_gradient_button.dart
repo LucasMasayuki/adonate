@@ -6,6 +6,7 @@ class RaisedGradientButton extends StatelessWidget {
   final Function onPressed;
   final EdgeInsets margin;
   final EdgeInsets padding;
+  final double width;
 
   const RaisedGradientButton({
     Key key,
@@ -14,6 +15,7 @@ class RaisedGradientButton extends StatelessWidget {
     this.onPressed,
     this.margin,
     this.padding,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -28,8 +30,9 @@ class RaisedGradientButton extends StatelessWidget {
             gradient: gradient,
             borderRadius: BorderRadius.all(Radius.circular(80.0))
         ),
-        padding: padding,
-        child: child,
+        padding: this.padding,
+        child: this.child,
+        width: this.width,
       ),
     );
   }

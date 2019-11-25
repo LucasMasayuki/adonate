@@ -13,6 +13,8 @@ import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 
+import 'CampaignActivity.dart';
+
 class CreateOrEditCampaignActivity extends StatefulWidget {
   const CreateOrEditCampaignActivity({this.campaign});
 
@@ -39,23 +41,53 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
 
   var steps;
   var progressDialog;
+  var defaultPurpouseTagValue;
+  var defaultItemTypeTagValue;
 
-  String _valorProposeTag;
-  String _valorTypeItemTag;
   int currentStep = 0;
   File _image;
 
   @override
   void initState() {
-    _nameController = TextEditingController(text: widget.campaign != null ? widget.campaign.name : null);
-    _startController = TextEditingController(text: widget.campaign != null ? formatter.format(widget.campaign.start) : null);
-    _endController = TextEditingController(text: widget.campaign != null ? formatter.format(widget.campaign.end) : null);
-    _descriptionController = TextEditingController(text: widget.campaign != null ? widget.campaign.description : null);
-    _zipcodeController = TextEditingController(text: widget.campaign != null ? widget.campaign.zipcode.toString() : null);
-    _streetController = TextEditingController(text: widget.campaign != null ? widget.campaign.street : null);
-    _numberController = TextEditingController(text: widget.campaign != null ? widget.campaign.number.toString() : null);
-    _cityController = TextEditingController(text: widget.campaign != null ? widget.campaign.city : null);
-    _stateController = TextEditingController(text: widget.campaign != null ?widget.campaign.state : null);
+    _nameController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.name : null
+    );
+
+    _startController = TextEditingController(
+      text: widget.campaign != null ? formatter.format(widget.campaign.start) : null
+    );
+
+    _endController = TextEditingController(
+      text: widget.campaign != null ? formatter.format(widget.campaign.end) : null
+    );
+
+    _descriptionController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.description : null
+    );
+
+    _zipcodeController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.zipcode.toString() : null
+    );
+
+    _streetController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.street : null
+    );
+
+    _numberController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.number.toString() : null
+    );
+
+    _cityController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.city : null
+    );
+
+    _stateController = TextEditingController(
+      text: widget.campaign != null ? widget.campaign.state : null
+    );
+
+    defaultPurpouseTagValue =  widget.campaign != null ? widget.campaign.purposeTagName : null;
+    defaultItemTypeTagValue =  widget.campaign != null ? widget.campaign.itemTypeTagName : null;
+
     super.initState();
   }
 
@@ -80,53 +112,59 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
         ),
       ),
       backgroundColor: primaryColor,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: _builderStep()
-          )
-        ],
-      )
+      body: _builderStep()
+    );
+  }
+  
+  Widget getPlaceHolder() {
+    var photoUrl = widget.campaign != null ? widget.campaign.photoUrl : null;
+    if ((photoUrl == null || photoUrl == "") && _image == null) {
+      return SizedBox(
+        height: 120,
+        child: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: Card(
+                color: Colors.grey,
+                child: Center(child: Text('Selecione uma imagem'))
+              )
+            ),
+          ],
+        ),
+      );
+    }
+
+    return FittedBox(
+      fit: BoxFit.fill,
+      child: Card(
+        color: Colors.grey,
+        child: returnPhotoOfFileOrUrl()
+      ),
     );
   }
 
   Widget _returnImageOfcampaign() {
+    var placeholder = getPlaceHolder();
     return Column(
       children: <Widget>[
         ListTile(
-          title: Text("Imagem da campanha"),
+          title: Text("Imagem da campanha", style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         GestureDetector(
           onTap: _getImage,
-          child: SizedBox(
-            height: 120,
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: Card(
-                    color: Colors.grey,
-                    child: returnPhotoOfFileOrUrl()
-                  )
-                ),
-              ],
-            ),
-          )
+          child: placeholder
         )
       ],
     );
   }
 
   Widget returnPhotoOfFileOrUrl() {
-    if (widget.campaign.photoUrl != null && _image == null) {
+    if (widget.campaign.photoUrl != "" && _image == null) {
       return CachedNetworkImage(
         imageUrl: widget.campaign.photoUrl,
         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => Icon(Icons.image),
       );
-    }
-
-    if (_image == null) {
-      return Center(child: Text('Selecione uma imagem'));
     }
 
     return Image.file(_image);
@@ -153,7 +191,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelStyle: TextStyle(color: Colors.black38),
-                labelText: 'Nome da campaign'
+                labelText: 'Nome da campanha'
               ),
               controller: _nameController,
               style: TextStyle(fontSize: 14),
@@ -222,15 +260,15 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
     ),
     Step(
       title: Text("Informações adicionais"),
-      content: Card(
-        margin: EdgeInsets.all(12.0),
+      content: Padding(
+        padding: EdgeInsets.only(bottom: 16.0),
         child: Column(
           children: <Widget>[
-             _returnImageOfcampaign(),
-             Column(
+            _returnImageOfcampaign(),
+            Column(
               children: <Widget>[
                 ListTile(
-                  title: Text("Tags da campanha")
+                  title: Text("Tags da campanha", style: TextStyle(fontWeight: FontWeight.bold))
                 ),
                 FutureBuilder(
                   future: Api.getRequest('tags'),
@@ -247,16 +285,17 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                     var tags = body.entries.toList()[3].value;
 
                     return TagDropdowns(
+                      reference: this,
                       tags: tags,
-                      defaultPurpouseTagValue: widget.campaign.itemTypeTagName,
-                      defaultItemTypeTagValue: widget.campaign.purposeTagName
+                      defaultPurpouseTagValue: defaultPurpouseTagValue,
+                      defaultItemTypeTagValue: defaultItemTypeTagValue
                     );
                   }
                 )
               ]
             )
           ],
-        ),
+        )
       ),
     ),
     Step(
@@ -285,7 +324,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                     maxLength: 10,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      MaskTextInputFormatter(mask: '#####-###')
+                      MaskTextInputFormatter(mask: '########')
                     ],
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -363,18 +402,29 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
       type: StepperType.vertical,
       steps: steps,
       currentStep: currentStep,
-      onStepContinue: next,
       onStepTapped: (step) => goTo(step),
-      onStepCancel: cancel,
-      controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+      controlsBuilder: (BuildContext context, {
+        VoidCallback onStepContinue, 
+        VoidCallback onStepCancel
+      }) {
         var cancelLabel = 'Voltar';
         var nextLabel = 'Continuar';
         var paddingCancelButton = defaultPaddingRaisedButtonFormSecondary;
-        var paddingNextButton = defaultPaddingRaisedButtonForm;
+        var paddingNextButton = EdgeInsets.only(
+          left: 20.0,
+          right: 20.0,
+          bottom: 12.0,
+          top: 12.0
+        );
 
         if (currentStep == 0) {
           cancelLabel = 'Cancelar';
-          paddingCancelButton = defaultPaddingRaisedButtonForm;
+          paddingCancelButton = EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            bottom: 12.0,
+            top: 12.0
+          );
         }
 
         if (currentStep == steps.length - 1) {
@@ -391,7 +441,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                     cancelLabel,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   gradient: LinearGradient(
@@ -400,7 +450,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                       gradientOfCancelButtonSecondary
                     ]
                   ),
-                  onPressed: cancel,
+                  onPressed: () => cancel(),
                   padding: paddingCancelButton,
                 ),
               ),
@@ -414,7 +464,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                     nextLabel,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   gradient: LinearGradient(
@@ -423,9 +473,11 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                       secondaryGradientColorButton,
                     ],
                   ),
-                  onPressed: next,
+                  onPressed: () => currentStep + 1 != steps.length
+                    ? goTo(currentStep + 1)
+                    : save(),
                   padding: paddingNextButton,
-                ),
+                )
               ),
             ],
         );
@@ -433,49 +485,77 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
     ),
   );
 
+  formatDate(date) {
+    var split = date.split('/');
+    return split[2] + '-' + split[1] + '-' + split[0];
+  }
+
+  formatImage() {
+    if (_image == null) {
+      return null;
+    }
+
+   String base64Image = base64Encode(_image.readAsBytesSync());
+   String fileName = _image.path.split("/").last;
+
+   return {
+     "img_name": fileName, 
+     "encoded_img": base64Image, 
+   };
+  }
+
   save() async {
     Map data = {
       "campaign": {
-        "id": widget.campaign.id,
-        "name": _nameController.value,
-        "start": _startController.value,
-        "end": _endController.value,
-        "description": _descriptionController.value,
+        "id": widget.campaign != null ? widget.campaign.campaignId : null,
+        "name": _nameController.text,
+        "start": formatDate(_startController.text),
+        "end": formatDate(_endController.text),
+        "description": _descriptionController.text,
       },
       "tags": {
-        "names": [_valorProposeTag, _valorTypeItemTag]
+        "purpouse": defaultPurpouseTagValue,
+        "item_type": defaultItemTypeTagValue
       },
       "address": {
-        "zipcode": _zipcodeController,
-        "state": _stateController,
-        "city": _cityController,
-        "number": _numberController,
-        "street": _streetController,
+        "zipcode": _zipcodeController.text,
+        "state": _stateController.text,
+        "city": _cityController.text,
+        "number": _numberController.text,
+        "street": _streetController.text,
       },
-      "photo": _image
+      "photo": formatImage()
     };
 
     progressDialog.style(
-      message: 'Salvando campaign...',
+      message: 'Salvando campainha...',
     );
 
     progressDialog.show();
+    var response;
 
-    var response = await Api.postRequest('register', data: data);
-    Map<String, dynamic> body = jsonDecode(response.body);
+    if (widget.campaign == null) {
+      response = await Api.putRequest('save_campaign', data: json.encode(data));
+    } else {
+      response = await Api.postRequest('save_campaign', data: json.encode(data));
+    }
 
     if (response.statusCode != 200) {
       progressDialog.hide();
       return;
     }
 
-    Navigator.pop(context);
-  }
+    int indexOfTab = 1;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CampaignActivity(
+          passedIndex: indexOfTab
+        )
+      )
+    );
 
-  next() {
-    currentStep + 1 != steps.length
-        ? goTo(currentStep + 1)
-        : save();
+    return;
   }
 
   cancel() {

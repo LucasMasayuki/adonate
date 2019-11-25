@@ -97,6 +97,7 @@ class LoginActivityState extends State<LoginActivity> {
   @override
   Widget build(BuildContext context) {
     progressDialog = new ProgressDialog(context);
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -128,7 +129,7 @@ class LoginActivityState extends State<LoginActivity> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
+              padding: EdgeInsets.fromLTRB(40, 4, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
                   controller: passwordController,
@@ -140,44 +141,18 @@ class LoginActivityState extends State<LoginActivity> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-              child: ButtonBar(
-                alignment: MainAxisAlignment.center,
+              padding: EdgeInsets.fromLTRB(40, 40, 40, 0),
+              child: Column(
                 children: <Widget>[
                   Container(
-                      child: RaisedGradientButton(
-                      child: Text(
-                        'Cadastrar',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          primaryGradientColorButton,
-                          secondaryGradientColorButton,
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterActivity()
-                          )
-                        );
-                      },
-                      padding: defaultPaddingRaisedButton,
-                    )
-                  ),
-                  Container(
-                      child: RaisedGradientButton(
+                    child: RaisedGradientButton(
                       child: Text(
                         'Entrar',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       gradient: LinearGradient(
                         colors: <Color>[
@@ -187,11 +162,32 @@ class LoginActivityState extends State<LoginActivity> {
                       ),
                       onPressed: () => login(),
                       padding: defaultPaddingRaisedButton,
+                      width: width,
                     )
                   ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20.0),
+                    child: InkWell(
+                      child: Text(
+                        "não possui conta ? cadastre-se",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterActivity()
+                          )
+                        );
+                      },
+                    )
+                  )
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

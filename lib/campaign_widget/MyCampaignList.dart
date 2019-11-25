@@ -15,19 +15,6 @@ class MyCampaignListState extends State<MyCampaignList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        heroTag: 'MinhasCampanhas',
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) => CreateOrEditCampaignActivity())
-          );
-        },
-        child: Icon(Icons.add),
-        elevation: 4,
-        mini: true
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: FutureBuilder(
         future: Api.getRequest('get_campaigns_of_adonator'),
         builder: (context, projectSnap) {
@@ -65,6 +52,7 @@ class MyCampaignListState extends State<MyCampaignList> {
 
               CampaignModel campaign = CampaignModel(
                 id: data[0].value.entries.toList()[0].value,
+                campaignId: data[4].value,
                 name: data[5].value,
                 description: data[6].value,
                 start: DateTime.parse(data[7].value),

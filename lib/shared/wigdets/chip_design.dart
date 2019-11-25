@@ -23,9 +23,9 @@ class ChipDesign extends StatelessWidget {
           ),
         ),
         backgroundColor: this.color,
-        elevation: 4,
+        elevation: 8,
         shadowColor: Colors.grey[50],
-        padding: EdgeInsets.all(4),
+        padding: EdgeInsets.all(0),
       ),
     );
   }

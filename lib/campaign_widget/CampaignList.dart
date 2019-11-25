@@ -7,6 +7,9 @@ import 'package:adonate/adapter/CampaignAdapter.dart';
 import 'package:adonate/model/CampaignModel.dart';
 
 class CampaignList extends StatefulWidget {
+  const CampaignList({this.searchParam});
+  final searchParam;
+
   @override
   State<StatefulWidget> createState() => CampaignListState();
 }
@@ -17,7 +20,9 @@ class CampaignListState extends State<CampaignList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: Api.getRequest('campaigns'),
+        future: widget.searchParam == null
+          ? Api.getRequest('campaigns')
+          : Api.getRequest('filter_campaign', params: widget.searchParam),
         builder: (context, projectSnap) {
           if (projectSnap.connectionState == ConnectionState.none && projectSnap.hasData == null) {
             return Center(child: CircularProgressIndicator());

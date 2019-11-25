@@ -11,39 +11,45 @@ class CampaignAdapter extends StatelessWidget {
   const CampaignAdapter({this.campaign});
   final CampaignModel campaign;
 
+  Widget havePhoto(width) {
+    if (campaign.photoUrl != "") {
+      return Container(
+        height: 120,
+        width: width,
+        child: FittedBox(
+          fit: BoxFit.fill,
+          child: Card(
+            color: Colors.grey,
+            child: CachedNetworkImage(
+              imageUrl: campaign.photoUrl,
+              placeholder: (context, url) => Center(child: Container(color: Colors.grey,)),
+              errorWidget: (context, url, error) => Container(height: 0),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Container(height: 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat("dd/MM/yyyy");
     double tagWidth = MediaQuery.of(context).size.width * 0.38;
     double descriptionWidth = MediaQuery.of(context).size.width * 0.58;
     String period = 'Desde ${formatter.format(campaign.start)}';
+    var width = MediaQuery.of(context).size.width;
 
     if (campaign.end != null) {
       period = 'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end)}';
     }
 
     return Card(
-      color: Colors.white,
       elevation: 3,
       child: Column(
         children: <Widget>[
-          SizedBox(
-            height: 120,
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: Card(
-                    color: Colors.grey,
-                    child: CachedNetworkImage(
-                      imageUrl: campaign.photoUrl,
-                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.image),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+          havePhoto(width),
           Padding(padding: EdgeInsets.only(top: 5)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
