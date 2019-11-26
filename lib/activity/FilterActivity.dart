@@ -68,7 +68,6 @@ class FilterActivityState extends State<FilterActivity> {
                           height: 46.0,
                           child: TextFormField(
                             scrollPadding: EdgeInsets.all(0.0),
-                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Procurar por campanha',
