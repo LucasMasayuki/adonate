@@ -69,15 +69,13 @@ class RegisterActivityState extends State<RegisterActivity> {
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CampaignActivity()
-      )
-    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CampaignActivity()));
   }
 
   @override
   Widget build(BuildContext context) {
     progressDialog = new ProgressDialog(context);
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -113,7 +111,7 @@ class RegisterActivityState extends State<RegisterActivity> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+              padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
                   controller: nameController,
@@ -162,7 +160,7 @@ class RegisterActivityState extends State<RegisterActivity> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 24, 40, 20),
+              padding: EdgeInsets.fromLTRB(40, 36, 40, 20),
               child: Center(
                   child: RaisedGradientButton(
                 child: Text(
@@ -171,6 +169,7 @@ class RegisterActivityState extends State<RegisterActivity> {
                     color: Colors.white,
                     fontSize: 16,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 gradient: LinearGradient(
                   colors: <Color>[
@@ -182,6 +181,7 @@ class RegisterActivityState extends State<RegisterActivity> {
                   register();
                 },
                 padding: defaultPaddingRaisedButton,
+                width: width
               )),
             )
           ],

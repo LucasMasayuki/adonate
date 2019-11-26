@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,10 +22,33 @@ class CampaignDetailActivity extends StatefulWidget {
 class CampaignDetailActivityState extends State<CampaignDetailActivity> {
   Completer<GoogleMapController> _controller = Completer();
 
+  Widget havePhoto(width) {
+    if (widget.campaign.photoUrl != "") {
+      return Container(
+        height: 120,
+        width: width,
+        child: FittedBox(
+          fit: BoxFit.fill,
+          child: Card(
+            color: Colors.grey,
+            child: CachedNetworkImage(
+              imageUrl: widget.campaign.photoUrl,
+              placeholder: (context, url) => Center(child: Container(color: Colors.grey,)),
+              errorWidget: (context, url, error) => Container(height: 0),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Container(height: 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat("dd/MM/yyyy");
     String period = 'Desde ${formatter.format(widget.campaign.start)}';
+    var width = MediaQuery.of(context).size.width;
 
     if (widget.campaign.end != null) {
       period =
@@ -54,12 +78,12 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
         slivers: <Widget>[
           SliverAppBar(
             iconTheme: IconThemeData(
-              color: Colors.white, //change your color here
+              color: Colors.white,
             ),
             pinned: true,
             snap: false,
             floating: false,
-            expandedHeight: 160,
+            expandedHeight: widget.campaign.photoUrl != "" ? 160 : 0,
             centerTitle: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
@@ -70,10 +94,7 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              background: Image.network(
-                widget.campaign.photoUrl,
-                fit: BoxFit.cover,
-              ),
+              background: havePhoto(width)
             ),
           ),
           SliverList(
@@ -84,8 +105,7 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding:
-                        const EdgeInsets.only(right: 8.0, left: 8.0, top: 16),
+                    padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 8),
                     child: Text(
                       period,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
@@ -108,7 +128,7 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(16),
               color: primaryColor,
               child: Center(
                   child: Text(

@@ -1,5 +1,4 @@
 
-import 'package:adonate/activity/FilterActivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -7,56 +6,120 @@ import 'package:adonate/shared/wigdets/default_drawer.dart';
 
 import 'package:adonate/campaign_widget/MyCampaignList.dart';
 import 'package:adonate/campaign_widget/CampaignList.dart';
+import 'package:adonate/activity/FilterActivity.dart';
+import 'package:adonate/activity/CreateOrEditCampaignActivity.dart';
 
 class CampaignActivity extends StatefulWidget {
+  CampaignActivity({this.passedIndex, this.searchParam});
+
+  int passedIndex;
+  var searchParam;
+
   @override
   State<StatefulWidget> createState() => CampaignActivityState();
 }
 
 class CampaignActivityState extends State<CampaignActivity> {
-  final tabPages = <Widget>[
-    CampaignList(),
-    MyCampaignList(),
-  ];
+  Future<bool> _onWillPopScope() async {
+    return false;
+  }
 
-  final tabs = <Tab>[
-    Tab(
-      icon: Icon(
-        FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
-        color: Colors.white
-      ),
-      text: "Campanhas"
-    ),
-    Tab(
-      icon: Icon(Icons.person_outline, color: Colors.white),
-      text: "Minhas campanhas"
-    )
-  ];
+  int _currentTabIndex = 0;
+
+  CancelFilter() {
+    setState(() {
+      widget.searchParam = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: tabPages.length,
+    final tabPages = <Widget>[
+      CampaignList(searchParam: widget.searchParam),
+      MyCampaignList(),
+    ];
+
+    final icons = <IconData>[
+      Icons.search,
+      Icons.add,
+      Icons.delete
+    ];
+
+    final pressAction = <Object>[
+      FilterActivity(),
+      CreateOrEditCampaignActivity(),
+      CancelFilter()
+    ];
+
+    var index = _currentTabIndex;
+    if (widget.passedIndex != null) {
+      index = widget.passedIndex;
+      widget.passedIndex = null;
+    }
+
+    final _kBottmonNavBarItems = <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        activeIcon: Icon(
+          FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
+          color: Colors.orange[200]
+        ),
+        icon: Icon(
+          FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
+          color: Colors.grey
+        ), 
+        title: Text('Campanhas',
+          style: TextStyle(
+            color: index == 0 ? Colors.orange[200] : Colors.grey,
+            fontWeight: FontWeight.bold
+          )
+        )
+      ),
+      BottomNavigationBarItem(
+        activeIcon: Icon(Icons.person, color: Colors.orange[200]),
+        icon: Icon(Icons.person, color: Colors.grey),
+        title: Text('Minhas campanhas',
+          style: TextStyle(
+            color: index == 1 ? Colors.orange[200] : Colors.grey,
+            fontWeight: FontWeight.bold
+          )
+        )
+      ),
+    ];
+
+    final bottomNavBar = BottomNavigationBar(
+      elevation: 16.0,
+      backgroundColor: Colors.white,
+      items: _kBottmonNavBarItems,
+      currentIndex: index,
+      type: BottomNavigationBarType.fixed,
+      onTap: (int index) {
+        setState(() {
+          _currentTabIndex = index;
+        });
+      },
+    );
+
+    var idx = index;
+    if (widget.searchParam != null) {
+      idx = 2;
+    }
+
+    return WillPopScope(
+      onWillPop: _onWillPopScope,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.orangeAccent,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) => pressAction[idx])
+            );
+          },
+          heroTag: "Hero",
+          child: Icon(icons[idx]),
+          elevation: 4,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         appBar: AppBar(
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white
-              ),
-              onPressed: () => {
-                Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => FilterActivity())
-                )
-              },
-            ),
-          ],
-          bottom: TabBar(
-            labelColor: Colors.white,
-            indicatorColor: Colors.orange,
-            tabs: tabs,
-          ),
           iconTheme: IconThemeData(
             color: Colors.white,
           ),
@@ -68,12 +131,9 @@ class CampaignActivityState extends State<CampaignActivity> {
         drawer: Drawer(
           child: DefaultDrawer(),
         ),
-        body: Builder(
-          builder: (context) {
-            return TabBarView(children: tabPages);
-          },
-        ),
-      ),
+        body: tabPages[index],
+        bottomNavigationBar: bottomNavBar,
+      )
     );
   }
 }
