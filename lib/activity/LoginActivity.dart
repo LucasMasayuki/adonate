@@ -40,7 +40,7 @@ class LoginActivityState extends State<LoginActivity> {
 
     progressDialog.show();
 
-    Response response = await Api.postRequest('login', data: data);
+    Response response = await Api.postRequest('login', data: json.encode(data));
 
     if (response.statusCode == 500) {
       progressDialog.hide();

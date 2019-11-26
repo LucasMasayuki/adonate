@@ -9,11 +9,12 @@ class Api {
     var response;
 
     if (token == null) {
-      if (params != null) {
-        url = Urls.getUri(keyUrl, params);
-      }
+      response = await http.get(url, headers: { 'Content-Type': 'application/json' });
+      return response;
+    }
 
-      response = await http.get(url);
+    if (params != null) {
+      response = await http.get(Urls.getUri(keyUrl, params), headers: { 'Authorization': 'Token $token', 'Content-Type': 'application/json' },);
       return response;
     }
 
@@ -27,7 +28,7 @@ class Api {
     var response;
 
     if (token == null) {
-      response = await http.post(url, body: data);
+      response = await http.post(url, body: data, headers: { 'Content-Type': 'application/json' });
       return response;
     }
 

@@ -1,6 +1,6 @@
 class Urls {
   static String baseUrl = 'https://adonate.appspot.com/';
-  static String baseUrlWithoutBar = 'https://adonate.appspot.com';
+  static String baseUrlWithoutBar = 'adonate.appspot.com';
   static Map url = {
     'login': 'login/',
     'register': 'register',
@@ -9,7 +9,8 @@ class Urls {
     'campaigns': 'api/campaigns/',
     'tags': 'api/tags/',
     'get_campaigns_of_adonator': 'api/get_campaigns_adonator',
-    'save_campaign': 'api/save_campaign'
+    'save_campaign': 'api/save_campaign',
+    'filter_campaign': 'api/filter_campaign',
   };
 
   static getUrl(key) {

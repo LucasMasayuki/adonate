@@ -43,12 +43,12 @@ class RegisterActivityState extends State<RegisterActivity> {
 
     progressDialog.show();
 
-    Response response = await Api.postRequest('register', data: data);
+    Response response = await Api.postRequest('register', data: json.encode(data));
     Map<String, dynamic> body = jsonDecode(response.body);
 
     var responseList = body.entries.toList();
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200 || response.statusCode != 201) {
       String firstKey = responseList[0].key;
       String message = responseList[0].value[0];
 

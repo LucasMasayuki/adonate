@@ -19,17 +19,17 @@ class FilterActivityState extends State<FilterActivity> {
   var defaultPurpouseTagValue;
 
   search() {
-    var data = {
+    Map<String, String> data = {
       "campaign_name": campaignNameController.text,
-      "purpouse": defaultPurpouseTagValue,
-      "item_type": defaultItemTypeTagValue
+      "purpouse": defaultPurpouseTagValue == null ? defaultPurpouseTagValue.toString() : defaultPurpouseTagValue,
+      "item_type": defaultItemTypeTagValue == null ? defaultItemTypeTagValue.toString() : defaultItemTypeTagValue
     };
 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => CampaignActivity(
-          searchParam: json.encode(data)
+          searchParam: data
         )
       )
     );
