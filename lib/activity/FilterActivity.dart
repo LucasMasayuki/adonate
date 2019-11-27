@@ -22,7 +22,7 @@ class FilterActivityState extends State<FilterActivity> {
     Map<String, String> data = {
       "campaign_name": campaignNameController.text,
       "purpouse": defaultPurpouseTagValue == null ? defaultPurpouseTagValue.toString() : defaultPurpouseTagValue,
-      "item_type": defaultItemTypeTagValue == null ? defaultItemTypeTagValue.toString() : defaultItemTypeTagValue,
+      "item_type": defaultItemTypeTagValue == null ? defaultItemTypeTagValue.toString() : defaultItemTypeTagValue
     };
 
     Navigator.pushReplacement(

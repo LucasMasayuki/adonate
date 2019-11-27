@@ -9,7 +9,7 @@ class Api {
     var response;
 
     if (token == null) {
-      response = await http.get(url);
+      response = await http.get(url, headers: { 'Content-Type': 'application/json' });
       return response;
     }
     
@@ -28,7 +28,7 @@ class Api {
     var response;
 
     if (token == null) {
-      response = await http.post(url, body: data);
+      response = await http.post(url, body: data, headers: { 'Content-Type': 'application/json' });
       return response;
     }
 
