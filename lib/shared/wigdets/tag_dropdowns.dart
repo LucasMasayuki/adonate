@@ -63,24 +63,6 @@ class TagDropdownsState extends State<TagDropdowns> {
           flex: 4,
           child: Center(
             child: DropdownButton(
-              hint: Text('Beneficiado / Objetivo', style: TextStyle(fontSize: 12, color: Colors.black)),
-              style: TextStyle(fontSize: 12, color: Colors.black),
-              items: purposeTagList,
-              value: _purposeTag,
-              onChanged: (value) {
-                _purposeTag = value;
-                setState(() {
-                  _purposeTag = value;
-                  widget.reference.defaultPurpouseTagValue = value;
-                });
-              }
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Center(
-            child: DropdownButton(
               hint: Text('O que doar', style: TextStyle(fontSize: 12, color: Colors.black)),
               style: TextStyle(fontSize: 12, color: Colors.black),  
               items: itemTypeTagList,
@@ -90,6 +72,24 @@ class TagDropdownsState extends State<TagDropdowns> {
                 setState(() {
                   _typeItemTag = value;
                   widget.reference.defaultItemTypeTagValue = value;
+                });
+              }
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 4,
+          child: Center(
+            child: DropdownButton(
+              hint: Text('Destino', style: TextStyle(fontSize: 12, color: Colors.black)),
+              style: TextStyle(fontSize: 12, color: Colors.black),
+              items: purposeTagList,
+              value: _purposeTag,
+              onChanged: (value) {
+                _purposeTag = value;
+                setState(() {
+                  _purposeTag = value;
+                  widget.reference.defaultPurpouseTagValue = value;
                 });
               }
             ),
