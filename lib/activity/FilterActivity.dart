@@ -19,17 +19,17 @@ class FilterActivityState extends State<FilterActivity> {
   var defaultPurpouseTagValue;
 
   search() {
-    var data = {
+    Map<String, String> data = {
       "campaign_name": campaignNameController.text,
-      "purpouse": defaultPurpouseTagValue,
-      "item_type": defaultItemTypeTagValue
+      "purpouse": defaultPurpouseTagValue == null ? defaultPurpouseTagValue.toString() : defaultPurpouseTagValue,
+      "item_type": defaultItemTypeTagValue == null ? defaultItemTypeTagValue.toString() : defaultItemTypeTagValue,
     };
 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => CampaignActivity(
-          searchParam: json.encode(data)
+          searchParam: data
         )
       )
     );
@@ -68,7 +68,6 @@ class FilterActivityState extends State<FilterActivity> {
                           height: 46.0,
                           child: TextFormField(
                             scrollPadding: EdgeInsets.all(0.0),
-                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Procurar por campanha',

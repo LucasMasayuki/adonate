@@ -33,7 +33,13 @@ class CampaignListState extends State<CampaignList> {
           }
 
           Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
-          var resultList = body.entries.toList()[3].value;
+
+          var resultList = [];
+          if (widget.searchParam == null) {
+            resultList = body.entries.toList()[3].value;
+          } else {
+            resultList = body.entries.toList()[0].value;
+          }
 
           return ListView.builder(
             itemCount: resultList.length,
