@@ -32,13 +32,25 @@ class CampaignListState extends State<CampaignList> {
             return Center(child: CircularProgressIndicator());
           }
 
-          Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
-          var resultList;
+          Map<String, dynamic> body = jsonDecode(
+            utf8.decode(projectSnap.data.bodyBytes)
+          );
 
-          if (widget.searchParam == null) {
-            resultList = body.entries.toList()[3].value;
+          var entries = body.entries.toList();
+          var resultList = [];
+
+          if (entries.length == 1){
+            resultList = entries[0].value;
           } else {
-            resultList = body.entries.toList()[0].value;
+            resultList = entries[3].value;
+          }
+
+          if (resultList.length == 0) {
+            return Container(
+              child: Center(
+                child: Text("Não foi encontrado nenhuma campanha"),
+              )
+            );
           }
 
           return ListView.builder(

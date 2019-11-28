@@ -281,7 +281,10 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
                       return Center(child: CircularProgressIndicator());
                     }
 
-                    Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
+                    Map<String, dynamic> body = jsonDecode(
+                      utf8.decode(projectSnap.data.bodyBytes)
+                    );
+
                     var tags = body.entries.toList()[3].value;
 
                     return TagDropdowns(

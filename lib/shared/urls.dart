@@ -10,7 +10,7 @@ class Urls {
     'tags': 'api/tags/',
     'get_campaigns_of_adonator': 'api/get_campaigns_adonator',
     'save_campaign': 'api/save_campaign',
-    'filter_campaign': 'api/filter_campaign',
+    'filter_campaign': 'api/filter_campaign'
   };
 
   static getUrl(key) {

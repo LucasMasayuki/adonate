@@ -13,17 +13,18 @@ class ChipDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(right: 8),
       child: Chip(
         label: Text(
           this.label,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: 10,
             fontWeight: FontWeight.bold
           ),
         ),
         backgroundColor: this.color,
-        elevation: 8,
+        elevation: 4,
         shadowColor: Colors.grey[50],
         padding: EdgeInsets.all(0),
       ),

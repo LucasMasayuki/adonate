@@ -26,12 +26,6 @@ class CampaignActivityState extends State<CampaignActivity> {
 
   int _currentTabIndex = 0;
 
-  CancelFilter() {
-    setState(() {
-      widget.searchParam = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final tabPages = <Widget>[
@@ -42,13 +36,12 @@ class CampaignActivityState extends State<CampaignActivity> {
     final icons = <IconData>[
       Icons.search,
       Icons.add,
-      Icons.delete
+      Icons.close
     ];
 
     final pressAction = <Object>[
       FilterActivity(),
       CreateOrEditCampaignActivity(),
-      CancelFilter()
     ];
 
     var index = _currentTabIndex;
@@ -104,12 +97,31 @@ class CampaignActivityState extends State<CampaignActivity> {
       idx = 2;
     }
 
+    if (_currentTabIndex == 1) {
+      idx = _currentTabIndex;
+    }
+
     return WillPopScope(
       onWillPop: _onWillPopScope,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.orangeAccent,
           onPressed: () {
+            if (_currentTabIndex == 1) {
+              idx = _currentTabIndex;
+            }
+
+            if (idx == 2) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CampaignActivity()
+                )
+              );
+
+              return;
+            }
+  
             Navigator.push(context, MaterialPageRoute(
               builder: (context) => pressAction[idx])
             );

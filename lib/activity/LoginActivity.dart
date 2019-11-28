@@ -67,7 +67,10 @@ class LoginActivityState extends State<LoginActivity> {
       return;
     }
 
-    Map<String, dynamic> body = jsonDecode(response.body);
+    Map<String, dynamic> body = jsonDecode(
+      utf8.decode(response.bodyBytes)
+    );
+  
     var responseList = body.entries.toList();
 
     if (response.statusCode != 200) {
