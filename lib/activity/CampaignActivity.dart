@@ -97,6 +97,10 @@ class CampaignActivityState extends State<CampaignActivity> {
       idx = 2;
     }
 
+    if (_currentTabIndex == 1) {
+      idx = _currentTabIndex;
+    }
+
     return WillPopScope(
       onWillPop: _onWillPopScope,
       child: Scaffold(
@@ -104,13 +108,17 @@ class CampaignActivityState extends State<CampaignActivity> {
           backgroundColor: Colors.orangeAccent,
           onPressed: () {
             if (_currentTabIndex == 1) {
-              idx = 1;
+              idx = _currentTabIndex;
             }
 
             if (idx == 2) {
-              setState(() {
-                widget.searchParam = null;
-              });
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CampaignActivity()
+                )
+              );
+
               return;
             }
   

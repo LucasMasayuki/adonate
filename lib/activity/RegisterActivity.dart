@@ -44,7 +44,10 @@ class RegisterActivityState extends State<RegisterActivity> {
     progressDialog.show();
 
     Response response = await Api.postRequest('register', data: json.encode(data));
-    Map<String, dynamic> body = jsonDecode(response.body);
+    
+    Map<String, dynamic> body = jsonDecode(
+      utf8.decode(response.bodyBytes)
+    );
 
     var responseList = body.entries.toList();
 

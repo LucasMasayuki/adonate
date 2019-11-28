@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,7 +26,7 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
   Widget havePhoto(width) {
     if (widget.campaign.photoUrl != "") {
       return Container(
-        height: 120,
+        height: 160,
         width: width,
         child: FittedBox(
           fit: BoxFit.fill,
@@ -74,71 +75,80 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
 
     return Scaffold(
       backgroundColor: primaryColor,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
-            pinned: true,
-            snap: false,
-            floating: false,
-            expandedHeight: widget.campaign.photoUrl != "" ? 160 : 0,
-            centerTitle: true,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: Text(
-                widget.campaign.name,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              background: havePhoto(width)
-            ),
-          ),
-          SliverList(
-              delegate: SliverChildListDelegate([
-            Card(
-              color: Colors.white,
-              elevation: 3,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 8),
-                    child: Text(
-                      period,
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          widget.campaign.name,
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget> [
+            havePhoto(width),
+            Container(
+              width: width,
+              child: Card(
+                color: Colors.white,
+                elevation: 3,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 8),
+                      child: Text(
+                        period,
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    child: Text(
-                      'Criado por: ${widget.campaign.adonatorName}',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Padding(
+                      child: Text(
+                        'Criado por: ${widget.campaign.adonatorName}',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                      padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 8.0),
                     ),
-                    padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(widget.campaign.description,
-                        maxLines: 3, style: TextStyle(color: Colors.grey)),
-                  ),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.start,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ExpandablePanel(
+                          collapsed: Text(
+                            widget.campaign.description,
+                            style: TextStyle(color: Colors.grey),
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis
+                          ),
+                          expanded: Text(
+                            widget.campaign.description,
+                            style: TextStyle(color: Colors.grey),
+                            softWrap: true,
+                          ),
+                          tapHeaderToExpand: true,
+                          hasIcon: true,
+                        )
+                    ),
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
               ),
             ),
             Container(
               padding: EdgeInsets.all(16),
               color: primaryColor,
               child: Center(
-                  child: Text(
-                'Localização',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              )),
+                child: Text(
+                  'Localização',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                )
+              ),
             ),
             Container(
               height: 300,
-              width: 100,
+              width: width,
               color: primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -157,6 +167,7 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
               ),
             ),
             Container(
+              width: width,
               padding: const EdgeInsets.only(bottom: 18.0),
               color: primaryColor,
               child: ButtonTheme.bar(
@@ -186,9 +197,9 @@ class CampaignDetailActivityState extends State<CampaignDetailActivity> {
                 ),
               ),
             )
-          ]))
-        ],
-      ),
+          ]
+        )
+      )
     );
   }
 

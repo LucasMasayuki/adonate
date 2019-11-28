@@ -9,16 +9,16 @@ class Api {
     var response;
 
     if (token == null) {
-      response = await http.get(url, headers: { 'Content-Type': 'application/json' });
+      response = await http.get(url, headers: { 'Content-Type': 'application/json; charset=utf-8' });
       return response;
     }
     
     if (params != null) {
-      response = await http.get(Urls.getUri(keyUrl, params), headers: { 'Authorization': 'Token $token', 'Content-Type': 'application/json' },);
+      response = await http.get(Urls.getUri(keyUrl, params), headers: { 'Authorization': 'Token $token', 'Content-Type': 'application/json; charset=utf-8' },);
       return response;
     }
 
-    response = await http.get(url, headers: { 'Authorization': 'Token $token', 'Content-Type': 'application/json' },);
+    response = await http.get(url, headers: { 'Authorization': 'Token $token', 'Content-Type': 'application/json; charset=utf-8' },);
     return response;
   }
 

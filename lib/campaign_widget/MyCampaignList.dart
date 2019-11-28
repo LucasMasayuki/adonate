@@ -26,7 +26,17 @@ class MyCampaignListState extends State<MyCampaignList> {
             return Center(child: CircularProgressIndicator());
           }
 
-          var resultList = jsonDecode(projectSnap.data.body);
+          var resultList = jsonDecode(
+            utf8.decode(projectSnap.data.bodyBytes)
+          );
+
+          if (resultList.length == 0) {
+            return Container(
+              child: Center(
+                child: Text("Não possui campanhas"),
+              )
+            );
+          }
 
           return ListView.builder(
             itemCount: resultList.length,

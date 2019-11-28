@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:intl/intl.dart';
 
 import 'package:adonate/model/CampaignModel.dart';
@@ -36,10 +38,10 @@ class CampaignAdapter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat("dd/MM/yyyy");
-    double tagWidth = MediaQuery.of(context).size.width * 0.38;
-    double descriptionWidth = MediaQuery.of(context).size.width * 0.58;
-    String period = 'Desde ${formatter.format(campaign.start)}';
     var width = MediaQuery.of(context).size.width;
+    double tagWidth = width * 0.25;
+    double descriptionWidth = width * 0.68;
+    String period = 'Desde ${formatter.format(campaign.start)}';
 
     if (campaign.end != null) {
       period = 'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end)}';
@@ -56,7 +58,6 @@ class CampaignAdapter extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(right: 20),
                 width: descriptionWidth,
                 child: Column(
                   children: <Widget>[
@@ -71,10 +72,21 @@ class CampaignAdapter extends StatelessWidget {
                       style: TextStyle(color: Colors.grey),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
-                    Text(
-                      campaign.description,
-                      maxLines: 3,
-                      style: TextStyle(color: Colors.grey),
+                    ExpandablePanel(
+                      collapsed: Text(
+                        campaign.description,
+                        style: TextStyle(color: Colors.grey),
+                        softWrap: true,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis
+                      ),
+                      expanded: Text(
+                        campaign.description,
+                        style: TextStyle(color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      tapHeaderToExpand: true,
+                      hasIcon: true,
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                   ],
@@ -83,21 +95,20 @@ class CampaignAdapter extends StatelessWidget {
               ),
               Container(
                 width: tagWidth,
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      ChipDesign(
-                        color: ColorsHelper.hexToColor(campaign.purposeTagColor),
-                        label: campaign.purposeTagName,
-                      ),
-                      ChipDesign(
-                        color: ColorsHelper.hexToColor(campaign.itemTypeTagColor),
-                        label: campaign.itemTypeTagName,
-                      ),
-                    ],
-                  ),
+                child: Wrap(
+                  direction: Axis.vertical,
+                  textDirection: prefix0.TextDirection.rtl,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  children: <Widget>[
+                    ChipDesign(
+                      color: ColorsHelper.hexToColor(campaign.purposeTagColor),
+                      label: campaign.purposeTagName,
+                    ),
+                    ChipDesign(
+                      color: ColorsHelper.hexToColor(campaign.itemTypeTagColor),
+                      label: campaign.itemTypeTagName,
+                    ),
+                  ],
                 ),
               ),
             ],

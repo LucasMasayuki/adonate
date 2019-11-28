@@ -23,7 +23,10 @@ class DefaultDrawer extends StatelessWidget {
           return Center( child: CircularProgressIndicator());
         }
 
-        Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
+        Map<String, dynamic> body = jsonDecode(
+          utf8.decode(projectSnap.data.bodyBytes)
+        );
+
         var data = body.entries.toList()[0].value.entries.toList();
         String userName = data[1].value;
         String userEmail = data[2].value;

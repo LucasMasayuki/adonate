@@ -25,6 +25,19 @@ class FilterActivityState extends State<FilterActivity> {
       "item_type": defaultItemTypeTagValue == null ? defaultItemTypeTagValue.toString() : defaultItemTypeTagValue
     };
 
+    if (campaignNameController.text == ""
+      && defaultPurpouseTagValue == null
+      &&defaultItemTypeTagValue == null) {
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CampaignActivity()
+        )
+      );
+      return;
+    }
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -95,7 +108,10 @@ class FilterActivityState extends State<FilterActivity> {
                               return Center(child: CircularProgressIndicator());
                             }
 
-                            Map<String, dynamic> body = jsonDecode(projectSnap.data.body);
+                            Map<String, dynamic> body = jsonDecode(
+                              utf8.decode(projectSnap.data.bodyBytes)
+                            );
+
                             var tags = body.entries.toList()[3].value;
                             return TagDropdowns(
                               reference: this,
