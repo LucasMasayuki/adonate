@@ -44,6 +44,10 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
   var defaultPurpouseTagValue;
   var defaultItemTypeTagValue;
 
+  var basicInformationStepState = StepState.editing;
+  var extraInformationStepState = StepState.indexed;
+  var addressStepState = StepState.indexed;
+
   int currentStep = 0;
   File _image;
 
@@ -183,6 +187,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
   getSteps() => [
     Step(
       title: Text("Informações básicas"),
+      state: basicInformationStepState,
       content: Column(
         children: <Widget>[
           Padding(
@@ -259,6 +264,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
       ),
     ),
     Step(
+      state: extraInformationStepState,
       title: Text("Informações adicionais"),
       content: Padding(
         padding: EdgeInsets.only(bottom: 16.0),
@@ -302,6 +308,7 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
       ),
     ),
     Step(
+      state: addressStepState,
       title: Text("Endereço"),
       content: Column(
         children: <Widget>[
@@ -508,6 +515,12 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
   }
 
   save() async {
+    bool isValid = validateAddressStep();
+    if (!isValid) {
+      setState(() => addressStepState = StepState.error);
+      return;
+    }
+  
     Map data = {
       "campaign": {
         "id": widget.campaign != null ? widget.campaign.campaignId : null,
@@ -570,6 +583,81 @@ class CreateOrEditCampaignActivityState extends State<CreateOrEditCampaignActivi
   }
 
   goTo(int step) {
-    setState(() => currentStep = step);
+    bool isValid = false;
+    switch(currentStep) {
+      case 0:
+        isValid = validateBasicInformationStep();
+        if (!isValid) {
+          setState(() => basicInformationStepState = StepState.error);
+          return;
+        }
+
+        break;
+
+      case 1:
+        isValid = validateExtraInformationStep();
+        if (!isValid) {
+          setState(() => extraInformationStepState = StepState.error);
+          return;
+        }
+
+        break;
+    }
+  
+    setState(() {
+      switch(currentStep) {
+        case 0:
+          basicInformationStepState = StepState.complete;
+          break;
+
+        case 1:
+          extraInformationStepState = StepState.complete;
+          break;
+      }
+
+      switch(step) {
+        case 0:
+          basicInformationStepState = StepState.editing;
+          break;
+
+        case 1:
+          extraInformationStepState = StepState.editing;
+          break;
+
+        case 2:
+          addressStepState = StepState.editing;
+          break;
+      }
+
+      currentStep = step;
+    });
+  }
+
+  validateBasicInformationStep() {
+    String name = _nameController.text;
+    String start = _startController.text;
+    String end = _endController.text;
+
+    bool isValid = name != "" && start != "" && end != "";
+    return isValid;
+  }
+
+  validateExtraInformationStep() {
+    String porpouse = defaultPurpouseTagValue;
+    String itemType = defaultItemTypeTagValue;
+
+    bool isValid = porpouse != null && itemType != null;
+    return isValid;
+  }
+
+  validateAddressStep() {
+    String zipcode = _zipcodeController.text;
+    String street = _streetController.text;
+    String number = _numberController.text;
+    String city = _cityController.text;
+    String state = _stateController.text;
+
+    bool isValid = zipcode != "" && street != "" && number != "" && city != "" && state != "";
+    return isValid;
   }
 }
