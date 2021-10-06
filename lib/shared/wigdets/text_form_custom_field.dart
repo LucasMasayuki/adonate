@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TextFormFieldCustom extends StatelessWidget {
-  final String errorText;
-  final String hintText;
-  final Function onChanged;
-  final TextInputType keyboardType;
-  final int maxLength;
+  final String? errorText;
+  final String? hintText;
+  final void Function(String)? onChanged;
+  final TextInputType? keyboardType;
+  final int? maxLength;
   final controller;
   final textCapitalization;
   final inputFormatters;
@@ -13,7 +13,7 @@ class TextFormFieldCustom extends StatelessWidget {
   final bool obscureText;
 
   const TextFormFieldCustom({
-    Key key,
+    Key? key,
     this.errorText,
     this.onChanged,
     this.hintText,

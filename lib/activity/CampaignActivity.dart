@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:adonate/shared/wigdets/default_drawer.dart';
 
@@ -10,10 +9,10 @@ import 'package:adonate/activity/FilterActivity.dart';
 import 'package:adonate/activity/CreateOrEditCampaignActivity.dart';
 
 class CampaignActivity extends StatefulWidget {
-  CampaignActivity({this.passedIndex, this.searchParam});
+  CampaignActivity({required this.passedIndex, this.searchParam});
 
-  int passedIndex;
-  var searchParam;
+  late final int? passedIndex;
+  final searchParam;
 
   @override
   State<StatefulWidget> createState() => CampaignActivityState();
@@ -33,49 +32,49 @@ class CampaignActivityState extends State<CampaignActivity> {
       MyCampaignList(),
     ];
 
-    final icons = <IconData>[
-      Icons.search,
-      Icons.add,
-      Icons.close
-    ];
+    final icons = <IconData>[Icons.search, Icons.add, Icons.close];
 
-    final pressAction = <Object>[
+    final pressAction = <Widget>[
       FilterActivity(),
-      CreateOrEditCampaignActivity(),
+      CreateOrEditCampaignActivity(
+        campaign: null,
+      ),
     ];
 
     var index = _currentTabIndex;
     if (widget.passedIndex != null) {
-      index = widget.passedIndex;
+      index = widget.passedIndex!;
       widget.passedIndex = null;
     }
 
     final _kBottmonNavBarItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        activeIcon: Icon(
-          FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
-          color: Colors.orange[200]
+        activeIcon: FaIcon(
+          FontAwesomeIcons.handHoldingHeart,
+          color: Colors.orange[200],
         ),
-        icon: Icon(
-          FontAwesome5.getIconData("hand-holding-heart", weight: IconWeight.Solid),
-          color: Colors.grey
-        ), 
-        title: Text('Campanhas',
+        icon: FaIcon(
+          FontAwesomeIcons.handHoldingHeart,
+          color: Colors.grey,
+        ),
+        title: Text(
+          'Campanhas',
           style: TextStyle(
             color: index == 0 ? Colors.orange[200] : Colors.grey,
-            fontWeight: FontWeight.bold
-          )
-        )
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       BottomNavigationBarItem(
         activeIcon: Icon(Icons.person, color: Colors.orange[200]),
         icon: Icon(Icons.person, color: Colors.grey),
-        title: Text('Minhas campanhas',
+        title: Text(
+          'Minhas campanhas',
           style: TextStyle(
             color: index == 1 ? Colors.orange[200] : Colors.grey,
-            fontWeight: FontWeight.bold
-          )
-        )
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     ];
 
@@ -102,50 +101,55 @@ class CampaignActivityState extends State<CampaignActivity> {
     }
 
     return WillPopScope(
-      onWillPop: _onWillPopScope,
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.orangeAccent,
-          onPressed: () {
-            if (_currentTabIndex == 1) {
-              idx = _currentTabIndex;
-            }
+        onWillPop: _onWillPopScope,
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.orangeAccent,
+            onPressed: () {
+              if (_currentTabIndex == 1) {
+                idx = _currentTabIndex;
+              }
 
-            if (idx == 2) {
-              Navigator.pushReplacement(
+              if (idx == 2) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CampaignActivity(
+                      passedIndex: null,
+                    ),
+                  ),
+                );
+
+                return;
+              }
+
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CampaignActivity()
-                )
+                  builder: (context) => pressAction[idx],
+                ),
               );
-
-              return;
-            }
-  
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => pressAction[idx])
-            );
-          },
-          heroTag: "Hero",
-          child: Icon(icons[idx]),
-          elevation: 4,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.white,
+            },
+            heroTag: "Hero",
+            child: Icon(icons[idx]),
+            elevation: 4,
           ),
-          title: Text(
-            'Adonate',
-            style: TextStyle(color: Colors.white),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          appBar: AppBar(
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            title: Text(
+              'Adonate',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-        ),
-        drawer: Drawer(
-          child: DefaultDrawer(),
-        ),
-        body: tabPages[index],
-        bottomNavigationBar: bottomNavBar,
-      )
-    );
+          drawer: Drawer(
+            child: DefaultDrawer(),
+          ),
+          body: tabPages[index],
+          bottomNavigationBar: bottomNavBar,
+        ));
   }
 }

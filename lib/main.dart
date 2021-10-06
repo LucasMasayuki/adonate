@@ -5,14 +5,16 @@ import 'package:adonate/activity/CampaignActivity.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 import 'package:adonate/shared/constants.dart';
 
-StatefulWidget activity;
+late StatefulWidget activity;
 
 void main() async {
   bool isLogged = await SharedPreferencesHelper.haveKey('token');
   activity = LoginActivity();
 
   if (isLogged) {
-    activity = CampaignActivity();
+    activity = CampaignActivity(
+      passedIndex: null,
+    );
   }
 
   runApp(MyApp());

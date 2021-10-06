@@ -10,7 +10,7 @@ import 'package:adonate/shared/colorsHelper.dart';
 import 'package:adonate/shared/wigdets/chip_design.dart';
 
 class CampaignAdapter extends StatelessWidget {
-  const CampaignAdapter({this.campaign});
+  const CampaignAdapter({required this.campaign});
   final CampaignModel campaign;
 
   Widget havePhoto(width) {
@@ -23,8 +23,11 @@ class CampaignAdapter extends StatelessWidget {
           child: Card(
             color: Colors.grey,
             child: CachedNetworkImage(
-              imageUrl: campaign.photoUrl,
-              placeholder: (context, url) => Center(child: Container(color: Colors.grey,)),
+              imageUrl: campaign.photoUrl ?? '',
+              placeholder: (context, url) => Center(
+                  child: Container(
+                color: Colors.grey,
+              )),
               errorWidget: (context, url, error) => Container(height: 0),
             ),
           ),
@@ -44,7 +47,8 @@ class CampaignAdapter extends StatelessWidget {
     String period = 'Desde ${formatter.format(campaign.start)}';
 
     if (campaign.end != null) {
-      period = 'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end)}';
+      period =
+          'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end!)}';
     }
 
     return Card(
@@ -64,7 +68,8 @@ class CampaignAdapter extends StatelessWidget {
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
                       campaign.name,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                     Text(
@@ -78,15 +83,17 @@ class CampaignAdapter extends StatelessWidget {
                         style: TextStyle(color: Colors.grey),
                         softWrap: true,
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis
+                        overflow: TextOverflow.ellipsis,
                       ),
                       expanded: Text(
                         campaign.description,
                         style: TextStyle(color: Colors.grey),
                         softWrap: true,
                       ),
-                      tapHeaderToExpand: true,
-                      hasIcon: true,
+                      theme: ExpandableThemeData(
+                        tapHeaderToExpand: true,
+                        hasIcon: true,
+                      ),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                   ],
@@ -101,12 +108,14 @@ class CampaignAdapter extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.start,
                   children: <Widget>[
                     ChipDesign(
-                      color: ColorsHelper.hexToColor(campaign.purposeTagColor),
-                      label: campaign.purposeTagName,
+                      color: ColorsHelper.hexToColor(
+                          campaign.purposeTagColor ?? ''),
+                      label: campaign.purposeTagName ?? '',
                     ),
                     ChipDesign(
-                      color: ColorsHelper.hexToColor(campaign.itemTypeTagColor),
-                      label: campaign.itemTypeTagName,
+                      color: ColorsHelper.hexToColor(
+                          campaign.itemTypeTagColor ?? ''),
+                      label: campaign.itemTypeTagName ?? '',
                     ),
                   ],
                 ),

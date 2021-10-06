@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:http/http.dart';
 
 import 'package:adonate/activity/CampaignActivity.dart';
@@ -23,54 +23,23 @@ class LoginActivityState extends State<LoginActivity> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  String emailErrorMessage;
-  String passwordErrorMessage;
+  String? emailErrorMessage;
+  String? passwordErrorMessage;
 
-  var progressDialog;
-
-  login() async {
+  Future<Response> login() async {
     Map data = {
       'email': emailController.text,
       'password': passwordController.text,
     };
 
-    progressDialog.style(
-      message: 'Entrando...',
-    );
-
-    progressDialog.show();
-
     Response response = await Api.postRequest('login', data: json.encode(data));
 
     if (response.statusCode == 500) {
-      progressDialog.hide();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // return object of type Dialog
-          return AlertDialog(
-            title: Text("Algo deu errado"),
-            content: Text("Tente novamente mais tarde"),
-            actions: <Widget>[
-              // define os botões na base do dialogo
-              new FlatButton(
-                child: new Text("ok"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        }
-      );
-
-      return;
+      return response;
     }
 
-    Map<String, dynamic> body = jsonDecode(
-      utf8.decode(response.bodyBytes)
-    );
-  
+    Map<String, dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
+
     var responseList = body.entries.toList();
 
     if (response.statusCode != 200) {
@@ -88,18 +57,57 @@ class LoginActivityState extends State<LoginActivity> {
         }
       });
 
-      progressDialog.hide();
-      return;
+      return response;
     }
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CampaignActivity()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CampaignActivity(
+          passedIndex: null,
+        ),
+      ),
+    );
+
+    return response;
+  }
+
+  Future<void> showProgress(BuildContext context) async {
+    var result = await showDialog(
+      context: context,
+      builder: (context) => FutureProgressDialog(
+        login(),
+        message: Text('Entrando...'),
+      ),
+    );
+    showResultDialog(context, result);
+  }
+
+  void showResultDialog(BuildContext context, Response response) {
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Algo deu errado"),
+          content: Text("Tente novamente mais tarde"),
+          actions: <Widget>[
+            // define os botões na base do dialogo
+            new FlatButton(
+              child: new Text("ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    progressDialog = new ProgressDialog(context);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
@@ -124,23 +132,21 @@ class LoginActivityState extends State<LoginActivity> {
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: emailController,
-                  hintText: 'email',
-                  errorText: emailErrorMessage,
-                  contentPadding: defaultPaddingLoginTextField
-                ),
+                    controller: emailController,
+                    hintText: 'email',
+                    errorText: emailErrorMessage,
+                    contentPadding: defaultPaddingLoginTextField),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 4, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: passwordController,
-                  hintText: 'senha',
-                  errorText: passwordErrorMessage,
-                  obscureText: true,
-                  contentPadding: defaultPaddingLoginTextField
-                ),
+                    controller: passwordController,
+                    hintText: 'senha',
+                    errorText: passwordErrorMessage,
+                    obscureText: true,
+                    contentPadding: defaultPaddingLoginTextField),
               ),
             ),
             Padding(
@@ -163,31 +169,30 @@ class LoginActivityState extends State<LoginActivity> {
                           secondaryGradientColorButton,
                         ],
                       ),
-                      onPressed: () => login(),
+                      onPressed: () => showProgress(context),
                       padding: defaultPaddingRaisedButton,
                       width: width,
-                    )
+                    ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 20.0),
-                    child: InkWell(
-                      child: Text(
-                        "não possui conta ? cadastre-se",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      margin: EdgeInsets.only(top: 20.0),
+                      child: InkWell(
+                        child: Text(
+                          "não possui conta ? cadastre-se",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterActivity()
-                          )
-                        );
-                      },
-                    )
-                  )
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterActivity(),
+                            ),
+                          );
+                        },
+                      ))
                 ],
               ),
             ),

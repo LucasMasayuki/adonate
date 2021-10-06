@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:http/http.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
@@ -16,18 +16,17 @@ class RegisterActivity extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => RegisterActivityState();
 }
+
 class RegisterActivityState extends State<RegisterActivity> {
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
   final nameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  String usernameErrorMessage;
-  String emailErrorMessage;
-  String password1ErrorMessage;
-  String password2ErrorMessage;
-
-  var progressDialog;
+  String? usernameErrorMessage;
+  String? emailErrorMessage;
+  String? password1ErrorMessage;
+  String? password2ErrorMessage;
 
   register() async {
     Map data = {
@@ -37,17 +36,10 @@ class RegisterActivityState extends State<RegisterActivity> {
       "password2": confirmPasswordController.text,
     };
 
-    progressDialog.style(
-      message: 'Criando usuario...',
-    );
+    Response response =
+        await Api.postRequest('register', data: json.encode(data));
 
-    progressDialog.show();
-
-    Response response = await Api.postRequest('register', data: json.encode(data));
-    
-    Map<String, dynamic> body = jsonDecode(
-      utf8.decode(response.bodyBytes)
-    );
+    Map<String, dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
 
     var responseList = body.entries.toList();
 
@@ -66,18 +58,57 @@ class RegisterActivityState extends State<RegisterActivity> {
         }
       });
 
-      progressDialog.hide();
-      return;
+      return response;
     }
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CampaignActivity()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CampaignActivity(
+          passedIndex: null,
+        ),
+      ),
+    );
+
+    return response;
+  }
+
+  Future<void> showProgress(BuildContext context) async {
+    var result = await showDialog(
+      context: context,
+      builder: (context) => FutureProgressDialog(
+        register(),
+        message: Text('Criando usuario...'),
+      ),
+    );
+    showResultDialog(context, result);
+  }
+
+  void showResultDialog(BuildContext context, Response response) {
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Algo deu errado"),
+          content: Text("Tente novamente mais tarde"),
+          actions: <Widget>[
+            // define os botões na base do dialogo
+            new FlatButton(
+              child: new Text("ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    progressDialog = new ProgressDialog(context);
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -117,75 +148,72 @@ class RegisterActivityState extends State<RegisterActivity> {
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: nameController,
-                  hintText: 'Nome',
-                  textCapitalization: TextCapitalization.words,
-                  keyboardType: TextInputType.text,
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: usernameErrorMessage
-                ),
+                    controller: nameController,
+                    hintText: 'Nome',
+                    textCapitalization: TextCapitalization.words,
+                    keyboardType: TextInputType.text,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: usernameErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: emailController,
-                  hintText: 'E-mail',
-                  keyboardType: TextInputType.emailAddress,
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: emailErrorMessage
-                ),
+                    controller: emailController,
+                    hintText: 'E-mail',
+                    keyboardType: TextInputType.emailAddress,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: emailErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: passwordController,
-                  hintText: 'Senha',
-                  obscureText: true,
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: password1ErrorMessage
-                ),
+                    controller: passwordController,
+                    hintText: 'Senha',
+                    obscureText: true,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: password1ErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 15, 40, 0),
               child: Center(
                 child: TextFormFieldCustom(
-                  controller: confirmPasswordController,
-                  hintText: 'Confirmar senha',
-                  obscureText: true,
-                  contentPadding: defaultPaddingFormTextField,
-                  errorText: password2ErrorMessage
-                ),
+                    controller: confirmPasswordController,
+                    hintText: 'Confirmar senha',
+                    obscureText: true,
+                    contentPadding: defaultPaddingFormTextField,
+                    errorText: password2ErrorMessage),
               ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 36, 40, 20),
               child: Center(
-                  child: RaisedGradientButton(
-                child: Text(
-                  'Criar',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                child: RaisedGradientButton(
+                  child: Text(
+                    'Criar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
+                  gradient: LinearGradient(
+                    colors: <Color>[
+                      primaryGradientColorButton,
+                      secondaryGradientColorButton,
+                    ],
+                  ),
+                  onPressed: () {
+                    showProgress(context);
+                  },
+                  padding: defaultPaddingRaisedButton,
+                  width: width,
                 ),
-                gradient: LinearGradient(
-                  colors: <Color>[
-                    primaryGradientColorButton,
-                    secondaryGradientColorButton,
-                  ],
-                ),
-                onPressed: () {
-                  register();
-                },
-                padding: defaultPaddingRaisedButton,
-                width: width
-              )),
+              ),
             )
           ],
         ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,7 +7,7 @@ import 'package:adonate/shared/colorsHelper.dart';
 import 'package:adonate/shared/wigdets/chip_design.dart';
 
 class MyCampaignAdapter extends StatelessWidget {
-  const MyCampaignAdapter({this.campaign});
+  const MyCampaignAdapter({required this.campaign});
   final CampaignModel campaign;
 
   @override
@@ -19,7 +18,8 @@ class MyCampaignAdapter extends StatelessWidget {
     String period = 'Desde ${formatter.format(campaign.start)}';
 
     if (campaign.end != null) {
-      period = 'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end)}';
+      period =
+          'De ${formatter.format(campaign.start)} \nAté ${formatter.format(campaign.end!)}';
     }
 
     return Card(
@@ -40,7 +40,8 @@ class MyCampaignAdapter extends StatelessWidget {
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
                       campaign.name,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 10)),
                     Text(
@@ -67,12 +68,16 @@ class MyCampaignAdapter extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       ChipDesign(
-                        label: campaign.purposeTagName,
-                        color: ColorsHelper.hexToColor(campaign.purposeTagColor),
+                        label: campaign.purposeTagName ?? '',
+                        color: ColorsHelper.hexToColor(
+                          campaign.purposeTagColor ?? '',
+                        ),
                       ),
                       ChipDesign(
-                        label: campaign.itemTypeTagName,
-                        color: ColorsHelper.hexToColor(campaign.itemTypeTagColor),
+                        label: campaign.itemTypeTagName ?? '',
+                        color: ColorsHelper.hexToColor(
+                          campaign.itemTypeTagColor ?? '',
+                        ),
                       ),
                     ],
                   ),

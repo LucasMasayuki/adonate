@@ -1,6 +1,6 @@
 class Urls {
-  static String baseUrl = 'https://adonate.appspot.com/';
-  static String baseUrlWithoutBar = 'adonate.appspot.com';
+  static String baseUrl = 'http://localhost:8000/';
+  static String baseUrlWithoutBar = 'localhost:8000';
   static Map url = {
     'login': 'login/',
     'register': 'register',
@@ -18,6 +18,6 @@ class Urls {
   }
 
   static getUri(key, param) {
-    return  Uri.https(baseUrlWithoutBar, url[key], param);
+    return Uri.https(baseUrlWithoutBar, url[key], param);
   }
 }

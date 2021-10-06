@@ -1,31 +1,51 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 import 'package:adonate/activity/LoginActivity.dart';
+import 'package:future_progress_dialog/future_progress_dialog.dart';
 
 class DefaultDrawer extends StatelessWidget {
-  const DefaultDrawer({Key key}) : super(key: key);
+  const DefaultDrawer({Key? key}) : super(key: key);
+
+  Future<void> onTap(context) async {
+    await Api.postRequest('logout');
+    await SharedPreferencesHelper.remove('token');
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginActivity()),
+      ModalRoute.withName("/Login"),
+    );
+  }
+
+  Future<void> showProgress(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => FutureProgressDialog(
+        onTap(context),
+        message: Text('Saindo...'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final drawerHeader = FutureBuilder<dynamic>(
-      future:  Api.getRequest('auth'),
+      future: Api.getRequest('auth'),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.none &&
             projectSnap.hasData == null) {
-          return Center( child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         }
 
         if (!projectSnap.hasData || projectSnap.data.statusCode != 200) {
-          return Center( child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         }
 
-        Map<String, dynamic> body = jsonDecode(
-          utf8.decode(projectSnap.data.bodyBytes)
-        );
+        Map<String, dynamic> body =
+            jsonDecode(utf8.decode(projectSnap.data.bodyBytes));
 
         var data = body.entries.toList()[0].value.entries.toList();
         String userName = data[1].value;
@@ -48,7 +68,7 @@ class DefaultDrawer extends StatelessWidget {
             backgroundColor: Colors.white,
           ),
         );
-      }
+      },
     );
 
     final drawerItems = ListView(
@@ -59,25 +79,7 @@ class DefaultDrawer extends StatelessWidget {
             'Logout',
             style: TextStyle(color: Colors.grey),
           ),
-          onTap: () async {
-              var progressDialog = new ProgressDialog(context);
-              progressDialog.style(
-                message: 'Saindo...',
-              );
-
-              progressDialog.show();
-              await Api.postRequest('logout');
-              await SharedPreferencesHelper.remove('token');
-              progressDialog.hide();
-
-              Navigator.pushAndRemoveUntil(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => LoginActivity()
-                ),
-                ModalRoute.withName("/Login")
-              );
-          }
+          onTap: () => showProgress,
         ),
       ],
     );
