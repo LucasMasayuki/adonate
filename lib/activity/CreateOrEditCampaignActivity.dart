@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:adonate/model/TagModel.dart';
+import 'package:adonate/shared/dio.dart';
 import 'package:adonate/shared/wigdets/tag_dropdowns.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -51,7 +53,7 @@ class CreateOrEditCampaignActivityState
   var addressStepState = StepState.indexed;
 
   int currentStep = 0;
-  File? _image;
+  File? _image = null;
 
   @override
   void initState() {
@@ -125,7 +127,7 @@ class CreateOrEditCampaignActivityState
   }
 
   Widget getPlaceHolder() {
-    var photoUrl = widget.campaign != null ? widget.campaign!.photoUrl : null;
+    var photoUrl = widget.campaign != null ? widget.campaign?.photoUrl : null;
     if ((photoUrl == null || photoUrl == "") && _image == null) {
       return SizedBox(
         height: 120,
@@ -181,6 +183,9 @@ class CreateOrEditCampaignActivityState
       );
     }
 
+    print('passa2');
+    print(_image);
+
     return Image.file(_image!);
   }
 
@@ -189,7 +194,9 @@ class CreateOrEditCampaignActivityState
         .pickImage(source: ImageSource.gallery, maxHeight: 100, maxWidth: 200);
 
     setState(() {
-      _image = image as File?;
+      if (image != null) {
+        _image = new File(image.path);
+      }
     });
   }
 
@@ -295,10 +302,10 @@ class CreateOrEditCampaignActivityState
                       ),
                     ),
                     FutureBuilder(
-                        future: Api.getRequest('tags'),
+                        future: DioAdapter().get('api/tags/'),
                         builder: (
                           context,
-                          AsyncSnapshot<Response> projectSnap,
+                          AsyncSnapshot<Response<dynamic>?> projectSnap,
                         ) {
                           if (projectSnap.connectionState ==
                                   ConnectionState.none &&
@@ -306,7 +313,6 @@ class CreateOrEditCampaignActivityState
                             return Center(child: CircularProgressIndicator());
                           }
 
-                          var statusCode;
                           if (!projectSnap.hasData ||
                               projectSnap.data!.statusCode != 200) {
                             return Center(
@@ -314,11 +320,15 @@ class CreateOrEditCampaignActivityState
                             );
                           }
 
-                          Map<String, dynamic> body = jsonDecode(
-                            utf8.decode(projectSnap.data!.bodyBytes),
-                          );
+                          var body = projectSnap.data?.data['results'];
 
-                          var tags = body.entries.toList()[3].value;
+                          List<TagModel> tags = (body as List)
+                              .map((e) => TagModel.fromJson(e))
+                              .toList();
+
+                          if (tags.length <= 0) {
+                            return Container();
+                          }
 
                           return TagDropdowns(
                             reference: this,
@@ -521,6 +531,9 @@ class CreateOrEditCampaignActivityState
       return null;
     }
 
+    print(_image);
+    print('passa');
+
     String base64Image = base64Encode(_image!.readAsBytesSync());
     String fileName = _image!.path.split("/").last;
 
@@ -537,7 +550,7 @@ class CreateOrEditCampaignActivityState
       return;
     }
 
-    Map data = {
+    Map<String, dynamic> data = {
       "campaign": {
         "id": widget.campaign != null ? widget.campaign!.campaignId : null,
         "name": _nameController.text,
@@ -562,10 +575,10 @@ class CreateOrEditCampaignActivityState
     var response;
 
     if (widget.campaign == null) {
-      response = await Api.putRequest('save_campaign', data: json.encode(data));
-    } else {
       response =
-          await Api.postRequest('save_campaign', data: json.encode(data));
+          await DioAdapter().put<dynamic>('api/save_campaign', data: data);
+    } else {
+      response = await DioAdapter().post('api/save_campaign', data: data);
     }
 
     if (response.statusCode != 200) {
@@ -687,8 +700,8 @@ class CreateOrEditCampaignActivityState
     showResultDialog(context, result);
   }
 
-  void showResultDialog(BuildContext context, Response response) {
-    if (response.statusCode == 500) {
+  void showResultDialog(BuildContext context, Response? response) {
+    if (response?.statusCode == 500) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:adonate/shared/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 import 'package:adonate/activity/LoginActivity.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
@@ -10,7 +10,7 @@ class DefaultDrawer extends StatelessWidget {
   const DefaultDrawer({Key? key}) : super(key: key);
 
   Future<void> onTap(context) async {
-    await Api.postRequest('logout');
+    await DioAdapter().post('logout/', data: {});
     await SharedPreferencesHelper.remove('token');
 
     Navigator.pushAndRemoveUntil(
@@ -33,10 +33,10 @@ class DefaultDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final drawerHeader = FutureBuilder<dynamic>(
-      future: Api.getRequest('auth'),
+      future: DioAdapter().get('api/auth'),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.none &&
-            projectSnap.hasData == null) {
+            projectSnap.hasData) {
           return Center(child: CircularProgressIndicator());
         }
 
@@ -44,12 +44,10 @@ class DefaultDrawer extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
 
-        Map<String, dynamic> body =
-            jsonDecode(utf8.decode(projectSnap.data.bodyBytes));
+        Map<String, dynamic> body = projectSnap.data.data;
 
-        var data = body.entries.toList()[0].value.entries.toList();
-        String userName = data[1].value;
-        String userEmail = data[2].value;
+        String userName = body['adonator']['name'];
+        String userEmail = body['adonator']['email'];
 
         return UserAccountsDrawerHeader(
           accountName: Text(

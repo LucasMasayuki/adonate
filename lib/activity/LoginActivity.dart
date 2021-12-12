@@ -1,7 +1,7 @@
-import 'dart:convert';
+import 'package:adonate/shared/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
-import 'package:http/http.dart';
 
 import 'package:adonate/activity/CampaignActivity.dart';
 import 'package:adonate/activity/RegisterActivity.dart';
@@ -9,7 +9,6 @@ import 'package:adonate/activity/RegisterActivity.dart';
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
 
-import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/errorMessages.dart';
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
@@ -26,67 +25,79 @@ class LoginActivityState extends State<LoginActivity> {
   String? emailErrorMessage;
   String? passwordErrorMessage;
 
-  Future<Response> login() async {
-    Map data = {
+  Future<Response?> login() async {
+    Map<String, dynamic> data = {
       'email': emailController.text,
       'password': passwordController.text,
     };
 
-    Response response = await Api.postRequest('login', data: json.encode(data));
+    try {
+      Response response = await DioAdapter().post<dynamic>(
+        'login/',
+        data: data,
+      );
 
-    if (response.statusCode == 500) {
-      return response;
-    }
+      if (response.statusCode == 500) {
+        return response;
+      }
 
-    Map<String, dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
+      Map<String, dynamic> body = response.data;
 
-    var responseList = body.entries.toList();
+      var responseList = body.entries.toList();
 
-    if (response.statusCode != 200) {
-      String firstKey = responseList[0].key;
-      String message = responseList[0].value[0];
+      if (response.statusCode != 200) {
+        String firstKey = responseList[0].key;
+        String message = responseList[0].value[0];
 
-      setState(() {
-        switch (firstKey) {
-          case 'password':
-            passwordErrorMessage = ErrorMessages.getError(firstKey, message);
-            break;
-          case 'email':
-            emailErrorMessage = ErrorMessages.getError(firstKey, message);
-            break;
-        }
-      });
+        setState(() {
+          switch (firstKey) {
+            case 'password':
+              passwordErrorMessage = ErrorMessages.getError(firstKey, message);
+              break;
+            case 'email':
+              emailErrorMessage = ErrorMessages.getError(firstKey, message);
+              break;
+          }
+        });
 
-      return response;
-    }
+        return response;
+      }
 
-    await SharedPreferencesHelper.save('token', body['key']);
+      await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CampaignActivity(
-          passedIndex: null,
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CampaignActivity(
+            passedIndex: null,
+          ),
         ),
-      ),
-    );
+      );
 
-    return response;
+      return response;
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> showProgress(BuildContext context) async {
-    var result = await showDialog(
-      context: context,
-      builder: (context) => FutureProgressDialog(
-        login(),
-        message: Text('Entrando...'),
-      ),
-    );
-    showResultDialog(context, result);
+    try {
+      var result = await showDialog(
+        context: context,
+        builder: (context) => FutureProgressDialog(
+          login(),
+          message: Text('Entrando...'),
+        ),
+      );
+
+      showResultDialog(context, result);
+    } catch (error) {
+      print(error);
+    }
   }
 
-  void showResultDialog(BuildContext context, Response response) {
-    if (response.statusCode == 500) {
+  void showResultDialog(BuildContext context, Response? response) {
+    if (response?.statusCode == 500) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

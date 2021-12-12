@@ -1,3 +1,4 @@
+import 'package:adonate/model/SearchParamModel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,7 +13,7 @@ class CampaignActivity extends StatefulWidget {
   CampaignActivity({required this.passedIndex, this.searchParam});
 
   late final int? passedIndex;
-  final searchParam;
+  final SearchParamModel? searchParam;
 
   @override
   State<StatefulWidget> createState() => CampaignActivityState();
@@ -101,55 +102,55 @@ class CampaignActivityState extends State<CampaignActivity> {
     }
 
     return WillPopScope(
-        onWillPop: _onWillPopScope,
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.orangeAccent,
-            onPressed: () {
-              if (_currentTabIndex == 1) {
-                idx = _currentTabIndex;
-              }
+      onWillPop: _onWillPopScope,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.orangeAccent,
+          onPressed: () {
+            if (_currentTabIndex == 1) {
+              idx = _currentTabIndex;
+            }
 
-              if (idx == 2) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CampaignActivity(
-                      passedIndex: null,
-                    ),
-                  ),
-                );
-
-                return;
-              }
-
-              Navigator.push(
+            if (idx == 2) {
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => pressAction[idx],
+                  builder: (context) => CampaignActivity(
+                    passedIndex: null,
+                  ),
                 ),
               );
-            },
-            heroTag: "Hero",
-            child: Icon(icons[idx]),
-            elevation: 4,
+
+              return;
+            }
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => pressAction[idx],
+              ),
+            );
+          },
+          heroTag: "Hero",
+          child: Icon(icons[idx]),
+          elevation: 4,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white,
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          appBar: AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
-            title: Text(
-              'Adonate',
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            'Adonate',
+            style: TextStyle(color: Colors.white),
           ),
-          drawer: Drawer(
-            child: DefaultDrawer(),
-          ),
-          body: tabPages[index],
-          bottomNavigationBar: bottomNavBar,
-        ));
+        ),
+        drawer: Drawer(
+          child: DefaultDrawer(),
+        ),
+        body: tabPages[index],
+        bottomNavigationBar: bottomNavBar,
+      ),
+    );
   }
 }

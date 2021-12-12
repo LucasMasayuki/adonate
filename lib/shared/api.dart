@@ -1,11 +1,10 @@
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 import 'urls.dart';
-import 'package:http/http.dart' as http;
 import 'package:adonate/shared/sharedPreferencesHelper.dart';
 
 class Api {
-  static Future<Response> getRequest(keyUrl, {params}) async {
+  static Future<http.Response> getRequest(keyUrl, {params}) async {
     String url = Urls.getUrl(keyUrl);
     String? token = await SharedPreferencesHelper.get('token');
     var response;
@@ -32,7 +31,7 @@ class Api {
     }
 
     response = await http.get(
-      Uri.http(url, ''),
+      Uri.parse(url),
       headers: {
         'Authorization': 'Token $token',
         'Content-Type': 'application/json; charset=utf-8'
@@ -41,19 +40,20 @@ class Api {
     return response;
   }
 
-  static Future<Response> postRequest(keyUrl, {data}) async {
+  static Future<http.Response> postRequest(keyUrl, {data}) async {
     String url = Urls.getUrl(keyUrl);
     String? token = await SharedPreferencesHelper.get('token');
     var response;
 
     if (token == null) {
       response = await http.post(
-        Uri.http(url, ''),
+        Uri.parse(url),
         body: data,
         headers: {
           'Content-Type': 'application/json',
         },
       );
+      print(response);
       return response;
     }
 
@@ -65,15 +65,16 @@ class Api {
         'Content-Type': 'application/json'
       },
     );
+
     return response;
   }
 
-  static Future<Response> deleteRequest(keyUrl, {data}) async {
+  static Future<http.Response> deleteRequest(keyUrl, {data}) async {
     String url = Urls.getUrl(keyUrl);
     String token = await SharedPreferencesHelper.get('token');
 
     var response = await http.delete(
-      Uri.http(url, ''),
+      Uri.parse(url),
       headers: {
         'Authorization': 'Token $token',
         'Content-Type': 'application/json'
@@ -82,12 +83,12 @@ class Api {
     return response;
   }
 
-  static Future<Response> putRequest(keyUrl, {data}) async {
+  static Future<http.Response> putRequest(keyUrl, {data}) async {
     String url = Urls.getUrl(keyUrl);
     String token = await SharedPreferencesHelper.get('token');
 
     var response = await http.put(
-      Uri.http(url, ''),
+      Uri.parse(url),
       body: data,
       headers: {
         'Authorization': 'Token $token',

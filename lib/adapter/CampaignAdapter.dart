@@ -109,12 +109,14 @@ class CampaignAdapter extends StatelessWidget {
                   children: <Widget>[
                     ChipDesign(
                       color: ColorsHelper.hexToColor(
-                          campaign.purposeTagColor ?? ''),
+                        campaign.purposeTagColor ?? '',
+                      ),
                       label: campaign.purposeTagName ?? '',
                     ),
                     ChipDesign(
                       color: ColorsHelper.hexToColor(
-                          campaign.itemTypeTagColor ?? ''),
+                        campaign.itemTypeTagColor ?? '',
+                      ),
                       label: campaign.itemTypeTagName ?? '',
                     ),
                   ],

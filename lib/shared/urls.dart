@@ -1,6 +1,6 @@
 class Urls {
-  static String baseUrl = 'http://localhost:8000/';
-  static String baseUrlWithoutBar = 'localhost:8000';
+  static String baseUrl = 'http://192.168.15.75:8000/';
+  static String baseUrlWithoutBar = '192.168.15.75:8000/';
   static Map url = {
     'login': 'login/',
     'register': 'register',

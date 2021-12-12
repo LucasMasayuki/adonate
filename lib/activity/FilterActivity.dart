@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:adonate/activity/CampaignActivity.dart';
+import 'package:adonate/model/SearchParamModel.dart';
+import 'package:adonate/model/TagModel.dart';
+import 'package:adonate/shared/dio.dart';
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/constants.dart';
 import 'package:adonate/shared/wigdets/tag_dropdowns.dart';
-import 'package:http/http.dart';
 
 class FilterActivity extends StatefulWidget {
   @override
@@ -20,35 +22,38 @@ class FilterActivityState extends State<FilterActivity> {
   var defaultPurpouseTagValue;
 
   search() {
-    Map<String, String> data = {
-      "campaign_name": campaignNameController.text,
-      "purpouse": defaultPurpouseTagValue == null
-          ? defaultPurpouseTagValue.toString()
-          : defaultPurpouseTagValue,
-      "item_type": defaultItemTypeTagValue == null
-          ? defaultItemTypeTagValue.toString()
-          : defaultItemTypeTagValue
-    };
+    SearchParamModel data = new SearchParamModel(
+        campaignName: campaignNameController.text,
+        purpouse: defaultPurpouseTagValue == null
+            ? defaultPurpouseTagValue.toString()
+            : defaultPurpouseTagValue,
+        itemType: defaultItemTypeTagValue == null
+            ? defaultItemTypeTagValue.toString()
+            : defaultItemTypeTagValue);
 
     if (campaignNameController.text == "" &&
         defaultPurpouseTagValue == null &&
         defaultItemTypeTagValue == null) {
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CampaignActivity(
-                    passedIndex: null,
-                  )));
+        context,
+        MaterialPageRoute(
+          builder: (context) => CampaignActivity(
+            passedIndex: null,
+          ),
+        ),
+      );
       return;
     }
 
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CampaignActivity(
-                  searchParam: data,
-                  passedIndex: null,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => CampaignActivity(
+          searchParam: data,
+          passedIndex: null,
+        ),
+      ),
+    );
 
     return;
   }
@@ -72,86 +77,100 @@ class FilterActivityState extends State<FilterActivity> {
       body: Builder(
         builder: (context) {
           return Container(
-              padding: EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-              child: Container(
-                  height: 280,
-                  child: SingleChildScrollView(
-                    child: Card(
-                        elevation: 5,
-                        child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(children: <Widget>[
-                              Container(
-                                width: width,
-                                height: 46.0,
-                                child: TextFormField(
-                                  scrollPadding: EdgeInsets.all(0.0),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Procurar por campanha',
-                                      labelStyle:
-                                          TextStyle(color: Colors.black38)),
-                                  controller: campaignNameController,
-                                  style: TextStyle(fontSize: 16),
-                                ),
+            padding: EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
+            child: Container(
+              height: 280,
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 5,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          width: width,
+                          height: 46.0,
+                          child: TextFormField(
+                            scrollPadding: EdgeInsets.all(0.0),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Procurar por campanha',
+                                labelStyle: TextStyle(color: Colors.black38)),
+                            controller: campaignNameController,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.all(8.0)),
+                        ListTile(
+                          title: Text(
+                            "Filtrar por tags",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        FutureBuilder(
+                          future: DioAdapter().get('api/tags/'),
+                          builder: (
+                            context,
+                            AsyncSnapshot<Response<dynamic>?> projectSnap,
+                          ) {
+                            if (projectSnap.connectionState ==
+                                    ConnectionState.none &&
+                                projectSnap.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            if (!projectSnap.hasData ||
+                                projectSnap.data!.statusCode != 200) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            var body = projectSnap.data?.data['results'];
+
+                            List<TagModel> tags = (body as List)
+                                .map((e) => TagModel.fromJson(e))
+                                .toList();
+
+                            return TagDropdowns(
+                              reference: this,
+                              tags: tags,
+                            );
+                          },
+                        ),
+                        Padding(padding: EdgeInsets.all(12.0)),
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          child: RaisedGradientButton(
+                            child: Text(
+                              "Procurar",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
                               ),
-                              Padding(padding: EdgeInsets.all(8.0)),
-                              ListTile(
-                                title: Text("Filtrar por tags",
-                                    style: TextStyle(fontSize: 14)),
-                              ),
-                              FutureBuilder(
-                                  future: Api.getRequest('tags'),
-                                  builder: (
-                                    context,
-                                    AsyncSnapshot<Response> projectSnap,
-                                  ) {
-                                    if (projectSnap.connectionState ==
-                                            ConnectionState.none &&
-                                        projectSnap.hasData) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-
-                                    if (!projectSnap.hasData ||
-                                        projectSnap.data!.statusCode != 200) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-
-                                    Map<String, dynamic> body = jsonDecode(utf8
-                                        .decode(projectSnap.data!.bodyBytes));
-
-                                    var tags = body.entries.toList()[3].value;
-                                    return TagDropdowns(
-                                        reference: this, tags: tags);
-                                  }),
-                              Padding(padding: EdgeInsets.all(12.0)),
-                              Container(
-                                alignment: Alignment.bottomRight,
-                                child: RaisedGradientButton(
-                                    child: Text(
-                                      "Procurar",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    gradient: LinearGradient(colors: <Color>[
-                                      primaryGradientColorButton,
-                                      secondaryGradientColorButton
-                                    ]),
-                                    onPressed: () => search(),
-                                    padding: EdgeInsets.only(
-                                        left: 12.0,
-                                        right: 12.0,
-                                        top: 12.0,
-                                        bottom: 12.0),
-                                    width: width),
-                              )
-                            ]))),
-                  )));
+                            ),
+                            gradient: LinearGradient(colors: <Color>[
+                              primaryGradientColorButton,
+                              secondaryGradientColorButton
+                            ]),
+                            onPressed: () => search(),
+                            padding: EdgeInsets.only(
+                              left: 12.0,
+                              right: 12.0,
+                              top: 12.0,
+                              bottom: 12.0,
+                            ),
+                            width: width,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
         },
       ),
     );

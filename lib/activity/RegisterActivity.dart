@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:adonate/shared/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:http/http.dart';
@@ -29,17 +30,16 @@ class RegisterActivityState extends State<RegisterActivity> {
   String? password2ErrorMessage;
 
   register() async {
-    Map data = {
+    Map<String, dynamic> data = {
       "username": nameController.text,
       "email": emailController.text,
       "password1": passwordController.text,
       "password2": confirmPasswordController.text,
     };
 
-    Response response =
-        await Api.postRequest('register', data: json.encode(data));
+    var response = await DioAdapter().post<dynamic>('register/', data: data);
 
-    Map<String, dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
+    Map<String, dynamic> body = response.data;
 
     var responseList = body.entries.toList();
 
@@ -76,18 +76,23 @@ class RegisterActivityState extends State<RegisterActivity> {
   }
 
   Future<void> showProgress(BuildContext context) async {
-    var result = await showDialog(
-      context: context,
-      builder: (context) => FutureProgressDialog(
-        register(),
-        message: Text('Criando usuario...'),
-      ),
-    );
-    showResultDialog(context, result);
+    try {
+      var result = await showDialog(
+        context: context,
+        builder: (context) => FutureProgressDialog(
+          register(),
+          message: Text('Criando usuario...'),
+        ),
+      );
+
+      showResultDialog(context, result);
+    } catch (error) {
+      print(error);
+    }
   }
 
-  void showResultDialog(BuildContext context, Response response) {
-    if (response.statusCode == 500) {
+  void showResultDialog(BuildContext context, Response? response) {
+    if (response?.statusCode == 500) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

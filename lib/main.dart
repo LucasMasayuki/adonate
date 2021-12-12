@@ -8,6 +8,7 @@ import 'package:adonate/shared/constants.dart';
 late StatefulWidget activity;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   bool isLogged = await SharedPreferencesHelper.haveKey('token');
   activity = LoginActivity();
 
