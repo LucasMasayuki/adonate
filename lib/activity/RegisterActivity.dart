@@ -37,7 +37,7 @@ class RegisterActivityState extends State<RegisterActivity> {
       "password2": confirmPasswordController.text,
     };
 
-    var response = await DioAdapter().post<dynamic>('register/', data: data);
+    var response = await DioAdapter().post<dynamic>('register', data: data);
 
     Map<String, dynamic> body = response.data;
 
@@ -63,15 +63,6 @@ class RegisterActivityState extends State<RegisterActivity> {
 
     await SharedPreferencesHelper.save('token', body['key']);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CampaignActivity(
-          passedIndex: null,
-        ),
-      ),
-    );
-
     return response;
   }
 
@@ -86,6 +77,15 @@ class RegisterActivityState extends State<RegisterActivity> {
       );
 
       showResultDialog(context, result);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CampaignActivity(
+            passedIndex: null,
+          ),
+        ),
+      );
     } catch (error) {
       print(error);
     }

@@ -173,7 +173,9 @@ class CreateOrEditCampaignActivityState
   }
 
   Widget returnPhotoOfFileOrUrl() {
-    if (widget.campaign!.photoUrl != "" && _image == null) {
+    if (widget.campaign != null &&
+        widget.campaign!.photoUrl != "" &&
+        _image == null) {
       return CachedNetworkImage(
         imageUrl: widget.campaign!.photoUrl ?? '',
         placeholder: (context, url) => Center(
@@ -552,7 +554,7 @@ class CreateOrEditCampaignActivityState
 
     Map<String, dynamic> data = {
       "campaign": {
-        "id": widget.campaign != null ? widget.campaign!.campaignId : null,
+        "id": widget.campaign != null ? widget.campaign!.id : null,
         "name": _nameController.text,
         "start": formatDate(_startController.text),
         "end": formatDate(_endController.text),
@@ -572,28 +574,20 @@ class CreateOrEditCampaignActivityState
       "photo": formatImage()
     };
 
+    print(widget.campaign);
+
     var response;
 
     if (widget.campaign == null) {
       response =
-          await DioAdapter().put<dynamic>('api/save_campaign', data: data);
+          await DioAdapter().post<dynamic>('api/save_campaign', data: data);
     } else {
-      response = await DioAdapter().post('api/save_campaign', data: data);
+      response = await DioAdapter().put('api/save_campaign', data: data);
     }
 
     if (response.statusCode != 200) {
       return response;
     }
-
-    int indexOfTab = 1;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CampaignActivity(
-          passedIndex: indexOfTab,
-        ),
-      ),
-    );
 
     return response;
   }
@@ -690,14 +684,27 @@ class CreateOrEditCampaignActivityState
   }
 
   Future<void> showProgress(BuildContext context) async {
-    var result = await showDialog(
-      context: context,
-      builder: (context) => FutureProgressDialog(
-        save(),
-        message: Text('Salvando campainha...'),
-      ),
-    );
-    showResultDialog(context, result);
+    try {
+      var result = await showDialog(
+        context: context,
+        builder: (context) => FutureProgressDialog(
+          save(),
+          message: Text('Salvando campainha...'),
+        ),
+      );
+      showResultDialog(context, result);
+      int indexOfTab = 1;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CampaignActivity(
+            passedIndex: indexOfTab,
+          ),
+        ),
+      );
+    } catch (error) {
+      print(error);
+    }
   }
 
   void showResultDialog(BuildContext context, Response? response) {

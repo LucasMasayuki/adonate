@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart' as prefix0;
 
 import 'package:adonate/model/CampaignModel.dart';
 
@@ -61,26 +62,24 @@ class MyCampaignAdapter extends StatelessWidget {
               ),
               Container(
                 width: tagWidth,
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      ChipDesign(
-                        label: campaign.purposeTagName ?? '',
-                        color: ColorsHelper.hexToColor(
-                          campaign.purposeTagColor ?? '',
-                        ),
+                child: Wrap(
+                  direction: Axis.vertical,
+                  textDirection: prefix0.TextDirection.rtl,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  children: <Widget>[
+                    ChipDesign(
+                      color: ColorsHelper.hexToColor(
+                        campaign.purposeTagColor ?? '',
                       ),
-                      ChipDesign(
-                        label: campaign.itemTypeTagName ?? '',
-                        color: ColorsHelper.hexToColor(
-                          campaign.itemTypeTagColor ?? '',
-                        ),
+                      label: campaign.purposeTagName ?? '',
+                    ),
+                    ChipDesign(
+                      color: ColorsHelper.hexToColor(
+                        campaign.itemTypeTagColor ?? '',
                       ),
-                    ],
-                  ),
+                      label: campaign.itemTypeTagName ?? '',
+                    ),
+                  ],
                 ),
               ),
             ],

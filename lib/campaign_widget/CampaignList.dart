@@ -20,16 +20,17 @@ class CampaignList extends StatefulWidget {
 class CampaignListState extends State<CampaignList> {
   @override
   Widget build(BuildContext context) {
-    var campaignName = widget.searchParam?.campaignName;
-    var itemType = widget.searchParam?.itemType;
-    var purpouse = widget.searchParam?.purpouse;
-
     return Scaffold(
       body: FutureBuilder(
           future: widget.searchParam == null
-              ? DioAdapter().get<dynamic>('api/campaigns/')
-              : DioAdapter().get<dynamic>(
-                  'api/filter_campaign?campaignName=$campaignName&purpouse=$purpouse&itemType=$itemType',
+              ? DioAdapter().get('api/campaigns/')
+              : DioAdapter().get(
+                  'api/filter_campaign',
+                  queryParameters: {
+                    'campaign_name': widget.searchParam?.campaignName,
+                    'item_type': widget.searchParam?.itemType,
+                    'purpouse': widget.searchParam?.purpouse,
+                  },
                 ),
           builder: (context, AsyncSnapshot<Response<dynamic>?> projectSnap) {
             if (projectSnap.connectionState == ConnectionState.none &&
@@ -37,13 +38,19 @@ class CampaignListState extends State<CampaignList> {
               return Center(child: CircularProgressIndicator());
             }
 
-            if (!projectSnap.hasData || projectSnap.data!.statusCode != 200) {
+            if (!projectSnap.hasData ||
+                projectSnap.data == null ||
+                projectSnap.data!.statusCode != 200) {
               return Center(child: CircularProgressIndicator());
             }
 
-            List<RemoteCampaignModel> campaigns = CampaignListWrapper.fromJson(
-              projectSnap.data?.data!['results'],
-            ).campaigns;
+            var campaigns = widget.searchParam != null
+                ? projectSnap.data?.data!['campaigns']
+                    .map(((result) => RemoteCampaignModel.fromJson(result)))
+                    .toList()
+                : projectSnap.data?.data!['results']
+                    .map(((result) => RemoteCampaignModel.fromJson(result)))
+                    .toList();
 
             if (campaigns.length == 0) {
               return Container(
@@ -64,9 +71,9 @@ class CampaignListState extends State<CampaignList> {
                 var lng = campaigns[index].address?.lng;
 
                 var photoUrl = '';
-                if (campaigns[index].campaignPhoto != null &&
-                    campaigns[index].campaignPhoto?.length != 0) {
-                  photoUrl = campaigns[index].campaignPhoto![0];
+                print(campaigns[index].campaignPhoto);
+                if (campaigns[index].campaignPhoto != null) {
+                  photoUrl = campaigns[index].campaignPhoto!;
                 }
 
                 CampaignModel campaign = CampaignModel(

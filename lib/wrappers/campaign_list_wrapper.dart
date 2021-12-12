@@ -1,7 +1,7 @@
 import 'package:adonate/model/RemoteCampaignModel.dart';
 
 class CampaignListWrapper {
-  late List<RemoteCampaignModel> campaigns;
+  List<RemoteCampaignModel>? campaigns;
 
   CampaignListWrapper();
 

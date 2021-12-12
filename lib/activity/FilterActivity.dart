@@ -23,13 +23,14 @@ class FilterActivityState extends State<FilterActivity> {
 
   search() {
     SearchParamModel data = new SearchParamModel(
-        campaignName: campaignNameController.text,
-        purpouse: defaultPurpouseTagValue == null
-            ? defaultPurpouseTagValue.toString()
-            : defaultPurpouseTagValue,
-        itemType: defaultItemTypeTagValue == null
-            ? defaultItemTypeTagValue.toString()
-            : defaultItemTypeTagValue);
+      campaignName: campaignNameController.text,
+      purpouse: defaultPurpouseTagValue == null
+          ? defaultPurpouseTagValue.toString()
+          : defaultPurpouseTagValue,
+      itemType: defaultItemTypeTagValue == null
+          ? defaultItemTypeTagValue.toString()
+          : defaultItemTypeTagValue,
+    );
 
     if (campaignNameController.text == "" &&
         defaultPurpouseTagValue == null &&

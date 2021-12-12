@@ -13,6 +13,13 @@ class Urls {
     'filter_campaign': 'api/filter_campaign'
   };
 
+  static List<String> routes = [
+    '/login',
+    '/campaigns',
+    '/campaign-detail',
+    '/edit-campaign'
+  ];
+
   static getUrl(key) {
     return baseUrl + url[key];
   }

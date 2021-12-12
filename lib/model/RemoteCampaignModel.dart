@@ -9,7 +9,7 @@ class RemoteCampaignModel {
   late DateTime start;
   DateTime? end;
   late String description;
-  List<String>? campaignPhoto;
+  String? campaignPhoto;
   List<TagModel>? tagCampaign;
   AdonatorModel? adonator;
   AddressModel? address;
@@ -33,7 +33,10 @@ class RemoteCampaignModel {
     start = DateTime.parse(json['start']);
     end = DateTime.parse(json['end']);
     description = json['description'];
-    campaignPhoto = json['campaignPhoto'];
+    campaignPhoto =
+        json['camapaign_photo'] != null && json['camapaign_photo'].length > 0
+            ? json['camapaign_photo'][0]['photo']['photo']
+            : null;
     adonator = AdonatorModel.fromJson(json['adonator']);
     address = AddressModel.fromJson(json['address']);
     tagCampaign = (json['tag_campaign'] as List)

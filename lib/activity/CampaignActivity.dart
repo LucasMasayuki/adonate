@@ -12,7 +12,7 @@ import 'package:adonate/activity/CreateOrEditCampaignActivity.dart';
 class CampaignActivity extends StatefulWidget {
   CampaignActivity({required this.passedIndex, this.searchParam});
 
-  late final int? passedIndex;
+  int? passedIndex;
   final SearchParamModel? searchParam;
 
   @override

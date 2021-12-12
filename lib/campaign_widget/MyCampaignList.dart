@@ -30,9 +30,9 @@ class MyCampaignListState extends State<MyCampaignList> {
               return Center(child: CircularProgressIndicator());
             }
 
-            List<RemoteCampaignModel> campaigns = CampaignListWrapper.fromJson(
-              projectSnap.data?.data,
-            ).campaigns;
+            var campaigns = projectSnap.data?.data
+                .map(((result) => RemoteCampaignModel.fromJson(result)))
+                .toList();
 
             if (campaigns.length == 0) {
               return Container(
@@ -82,6 +82,7 @@ class MyCampaignListState extends State<MyCampaignList> {
                   adonatorName: adonatorName,
                   adonatorEmail: adonatorEmail,
                   photoUrl: photoUrl,
+                  id: campaigns[index].id,
                 );
 
                 return GestureDetector(

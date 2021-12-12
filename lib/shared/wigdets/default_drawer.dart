@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:adonate/shared/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -77,7 +76,7 @@ class DefaultDrawer extends StatelessWidget {
             'Logout',
             style: TextStyle(color: Colors.grey),
           ),
-          onTap: () => showProgress,
+          onTap: () => showProgress(context),
         ),
       ],
     );
