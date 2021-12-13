@@ -45,7 +45,9 @@ class DefaultDrawer extends StatelessWidget {
 
         Map<String, dynamic> body = projectSnap.data.data;
 
-        String userName = body['adonator']['name'];
+        print(body);
+
+        String userName = body['adonator']['name'] ?? '';
         String userEmail = body['adonator']['email'];
 
         return UserAccountsDrawerHeader(

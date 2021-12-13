@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:adonate/shared/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
-import 'package:http/http.dart';
 
-import 'package:adonate/shared/api.dart';
 import 'package:adonate/shared/wigdets/text_form_custom_field.dart';
 import 'package:adonate/shared/wigdets/raised_gradient_button.dart';
 import 'package:adonate/shared/constants.dart';
@@ -37,33 +36,39 @@ class RegisterActivityState extends State<RegisterActivity> {
       "password2": confirmPasswordController.text,
     };
 
-    var response = await DioAdapter().post<dynamic>('register', data: data);
+    try {
+      var response = await DioAdapter().post<dynamic>('register', data: data);
 
-    Map<String, dynamic> body = response.data;
+      Map<String, dynamic> body = response.data;
 
-    var responseList = body.entries.toList();
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        var responseList = body.entries.toList();
+        String firstKey = responseList[0].key;
+        String message = responseList[0].value[0];
 
-    if (response.statusCode != 200 || response.statusCode != 201) {
-      String firstKey = responseList[0].key;
-      String message = responseList[0].value[0];
+        setState(() {
+          switch (firstKey) {
+            case 'password':
+              usernameErrorMessage = ErrorMessages.getError(firstKey, message);
+              break;
+            case 'email':
+              emailErrorMessage = ErrorMessages.getError(firstKey, message);
+              break;
+          }
+        });
 
-      setState(() {
-        switch (firstKey) {
-          case 'password':
-            usernameErrorMessage = ErrorMessages.getError(firstKey, message);
-            break;
-          case 'email':
-            emailErrorMessage = ErrorMessages.getError(firstKey, message);
-            break;
-        }
-      });
+        return response;
+      }
+
+      print(body);
+      print(body['key']);
+
+      await SharedPreferencesHelper.save('token', body['key']);
 
       return response;
+    } catch (error) {
+      print(error);
     }
-
-    await SharedPreferencesHelper.save('token', body['key']);
-
-    return response;
   }
 
   Future<void> showProgress(BuildContext context) async {
@@ -91,8 +96,8 @@ class RegisterActivityState extends State<RegisterActivity> {
     }
   }
 
-  void showResultDialog(BuildContext context, Response? response) {
-    if (response?.statusCode == 500) {
+  void showResultDialog(BuildContext context, Response<dynamic> response) {
+    if (response.statusCode == 500) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

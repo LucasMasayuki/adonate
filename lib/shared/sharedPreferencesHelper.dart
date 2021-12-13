@@ -15,6 +15,7 @@ class SharedPreferencesHelper {
 
   static save(key, value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(value);
     prefs.setString(key, value);
   }
 

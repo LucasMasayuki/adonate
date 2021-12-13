@@ -65,15 +65,6 @@ class LoginActivityState extends State<LoginActivity> {
 
       await SharedPreferencesHelper.save('token', body['key']);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CampaignActivity(
-            passedIndex: null,
-          ),
-        ),
-      );
-
       return response;
     } catch (error) {
       print(error);
@@ -91,6 +82,15 @@ class LoginActivityState extends State<LoginActivity> {
       );
 
       showResultDialog(context, result);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CampaignActivity(
+            passedIndex: null,
+          ),
+        ),
+      );
     } catch (error) {
       print(error);
     }
